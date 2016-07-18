@@ -1,4 +1,4 @@
-(ns arachne.core.module-test
+(ns arachne.http-test
   (:require [clojure.test :refer :all]
             [arachne.core]))
 
