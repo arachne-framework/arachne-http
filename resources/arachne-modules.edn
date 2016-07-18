@@ -1,0 +1,3 @@
+[{:arachne.module/name :org.arachne-framework/arachne-http
+  :arachne.module/schema arachne.http/schema
+  :arachne.module/configure arachne.http/configure}]
