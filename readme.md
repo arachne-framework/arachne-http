@@ -1,6 +1,6 @@
 # arachne-http
 
-[![CircleCI](https://circleci.com/gh/arachne-framework/arachne-core/tree/master.svg?style=shield&circle-token=d25784e9a1041fe6b7ac7bd4ea64641bcc3c1a77)](https://circleci.com/gh/arachne-framework/arachne-http/tree/master)
+[![CircleCI](https://circleci.com/gh/arachne-framework/arachne-tree/tree/master.svg?style=shield&circle-token=d25784e9a1041fe6b7ac7bd4ea64641bcc3c1a77)](https://circleci.com/gh/arachne-framework/arachne-http/tree/master)
 
 This is the abstract HTTP Arachne module, defining the basic
 attributes of a HTTP server.
