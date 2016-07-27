@@ -1,0 +1,466 @@
+2016-07-27 15:24:44
+Full thread dump Java HotSpot(TM) 64-Bit Server VM (25.5-b02 mixed mode):
+
+"Attach Listener" #47 daemon prio=9 os_prio=31 tid=0x00007fb44e05b000 nid=0xd803 waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"query-8" #46 daemon prio=5 os_prio=31 tid=0x00007fb44e1ad800 nid=0xd603 waiting on condition [0x000070000304e000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"query-7" #45 daemon prio=5 os_prio=31 tid=0x00007fb44e823000 nid=0x600b waiting on condition [0x0000700002f4b000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"query-6" #44 daemon prio=5 os_prio=31 tid=0x00007fb44a90f800 nid=0x710b waiting on condition [0x0000700002e48000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"query-5" #43 daemon prio=5 os_prio=31 tid=0x00007fb44e822000 nid=0x800b waiting on condition [0x0000700002d45000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"query-4" #42 daemon prio=5 os_prio=31 tid=0x00007fb44f2d7800 nid=0x810b waiting on condition [0x0000700002c42000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"query-3" #41 daemon prio=5 os_prio=31 tid=0x00007fb44dbfa800 nid=0x6a0b waiting on condition [0x0000700002b3f000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"query-2" #40 daemon prio=5 os_prio=31 tid=0x00007fb44e8c5800 nid=0x780b waiting on condition [0x0000700002a3c000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"query-1" #39 daemon prio=5 os_prio=31 tid=0x00007fb449a25000 nid=0x700b waiting on condition [0x0000700002939000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c1b8ebe8> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"Thread-9" #36 daemon prio=5 os_prio=31 tid=0x00007fb44a1dc000 nid=0x110b waiting on condition [0x0000700001a0b000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c0bcbf70> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.put(LinkedBlockingQueue.java:350)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at clojure.lang.Reflector.invokeMatchingMethod(Reflector.java:93)
+	at clojure.lang.Reflector.invokeInstanceMethod(Reflector.java:28)
+	at boot.pod$lifecycle_pool$putp__1099.invoke(pod.clj:750)
+	at boot.pod$lifecycle_pool$fill__1102.invoke(pod.clj:751)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.lang.Thread.run(Thread.java:745)
+
+"Thread-8" #35 daemon prio=5 os_prio=31 tid=0x00007fb44a841800 nid=0xd303 waiting on condition [0x0000700002836000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c0bb3850> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at boot.core$watch_dirs$fn__748$fn__751.invoke(core.clj:688)
+	at boot.core$watch_dirs$fn__748.invoke(core.clj:688)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.lang.Thread.run(Thread.java:745)
+
+"Thread-7" #34 prio=5 os_prio=31 tid=0x00007fb44c3d1800 nid=0xcf03 waiting on condition [0x0000700002732000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c0bb4d70> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingDeque.takeFirst(LinkedBlockingDeque.java:492)
+	at java.util.concurrent.LinkedBlockingDeque.take(LinkedBlockingDeque.java:680)
+	at com.barbarysoftware.watchservice.AbstractWatchService.take(AbstractWatchService.java:115)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at clojure.lang.Reflector.invokeMatchingMethod(Reflector.java:93)
+	at clojure.lang.Reflector.invokeNoArgInstanceMember(Reflector.java:313)
+	at boot.watcher$take_watch_key.invoke(watcher.clj:77)
+	at boot.watcher$service$fn__4854.invoke(watcher.clj:95)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.lang.Thread.run(Thread.java:745)
+
+"WatchService for test/arachne/http" #33 daemon prio=5 os_prio=31 tid=0x00007fb44a450800 nid=0xc903 runnable [0x0000700002630000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for test/arachne" #32 daemon prio=5 os_prio=31 tid=0x00007fb449ce3000 nid=0xc103 runnable [0x000070000252d000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for test" #31 daemon prio=5 os_prio=31 tid=0x00007fb44c2f9800 nid=0xb903 runnable [0x000070000242a000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for resources" #30 daemon prio=5 os_prio=31 tid=0x00007fb44d56e000 nid=0xb103 runnable [0x0000700002327000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for dev" #29 daemon prio=5 os_prio=31 tid=0x00007fb44e06a000 nid=0xa903 runnable [0x0000700002224000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for src/arachne/http/dsl" #28 daemon prio=5 os_prio=31 tid=0x00007fb44a64b000 nid=0xa103 runnable [0x0000700002121000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for src/arachne/http" #27 daemon prio=5 os_prio=31 tid=0x00007fb4499f3800 nid=0x9903 runnable [0x0000700001e1e000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for src/arachne" #26 daemon prio=5 os_prio=31 tid=0x00007fb44abe2000 nid=0x9103 runnable [0x0000700001d1b000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"WatchService for src" #25 daemon prio=5 os_prio=31 tid=0x00007fb44c2f9000 nid=0x8907 runnable [0x0000700001c18000]
+   java.lang.Thread.State: RUNNABLE
+	at com.sun.jna.Native.invokeVoid(Native Method)
+	at com.sun.jna.Function.invoke(Function.java:367)
+	at com.sun.jna.Function.invoke(Function.java:315)
+	at com.sun.jna.Library$Handler.invoke(Library.java:212)
+	at com.sun.proxy.$Proxy0.CFRunLoopRun(Unknown Source)
+	at com.barbarysoftware.watchservice.MacOSXListeningWatchService$CFRunLoopThread.run(MacOSXListeningWatchService.java:73)
+
+"Thread-6" #24 daemon prio=5 os_prio=31 tid=0x00007fb44abe3000 nid=0x8b03 waiting on condition [0x000070000201e000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c0bd2280> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at boot.core$watch_dirs$fn__748$fn__751.invoke(core.clj:688)
+	at boot.core$watch_dirs$fn__748.invoke(core.clj:688)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.lang.Thread.run(Thread.java:745)
+
+"clojure-agent-send-off-pool-1" #17 prio=5 os_prio=31 tid=0x00007fb44a450000 nid=0x5e03 runnable [0x0000700001905000]
+   java.lang.Thread.State: RUNNABLE
+	at clojure.lang.PersistentHashMap$ArrayNode$Seq.next(PersistentHashMap.java:620)
+	at clojure.lang.APersistentMap$KeySeq.next(APersistentMap.java:170)
+	at clojure.lang.RT.next(RT.java:703)
+	at clojure.core$next__6156.invokeStatic(core.clj:64)
+	at clojure.core$reduce1.invokeStatic(core.clj:936)
+	at clojure.core$set.invokeStatic(core.clj:4064)
+	at clojure.core$set.invoke(core.clj:4056)
+	at datascript.query$intersect_keys.invokeStatic(query.cljc:39)
+	at datascript.query$intersect_keys.invoke(query.cljc:38)
+	at datascript.query$hash_join.invokeStatic(query.cljc:334)
+	at datascript.query$hash_join.invoke(query.cljc:329)
+	at datascript.query$collapse_rels.invokeStatic(query.cljc:402)
+	at datascript.query$collapse_rels.invoke(query.cljc:396)
+	at clojure.lang.AFn.applyToHelper(AFn.java:156)
+	at clojure.lang.AFn.applyTo(AFn.java:144)
+	at clojure.core$apply.invokeStatic(core.clj:659)
+	at clojure.core$update_in$up__7610.invoke(core.clj:6066)
+	at clojure.core$update_in.invokeStatic(core.clj:6067)
+	at clojure.core$update_in.doInvoke(core.clj:6053)
+	at clojure.lang.RestFn.invoke(RestFn.java:467)
+	at datascript.query$_resolve_clause.invokeStatic(query.cljc:614)
+	at datascript.query$_resolve_clause.invoke(query.cljc:598)
+	at clojure.core.protocols$fn__8889.invokeStatic(protocols.clj:167)
+	at clojure.core.protocols$fn__8889.invoke(protocols.clj:124)
+	at clojure.core.protocols$fn__8844$G__8839__8853.invoke(protocols.clj:19)
+	at clojure.core.protocols$seq_reduce.invokeStatic(protocols.clj:31)
+	at clojure.core.protocols$fn__8872.invokeStatic(protocols.clj:75)
+	at clojure.core.protocols$fn__8872.invoke(protocols.clj:75)
+	at clojure.core.protocols$fn__8818$G__8813__8831.invoke(protocols.clj:13)
+	at clojure.core$reduce.invokeStatic(core.clj:6703)
+	at clojure.core$reduce.invoke(core.clj:6685)
+	at datascript.query$solve_rule$solve__6145.invoke(query.cljc:526)
+	at datascript.query$solve_rule.invokeStatic(query.cljc:540)
+	at datascript.query$solve_rule.invoke(query.cljc:521)
+	at datascript.query$resolve_clause.invokeStatic(query.cljc:622)
+	at datascript.query$resolve_clause.invoke(query.cljc:616)
+	at clojure.lang.PersistentVector.reduce(PersistentVector.java:341)
+	at clojure.core$reduce.invokeStatic(core.clj:6702)
+	at clojure.core$reduce.invoke(core.clj:6685)
+	at datascript.query$_q.invokeStatic(query.cljc:627)
+	at datascript.query$_q.invoke(query.cljc:626)
+	at datascript.query$q.invokeStatic(query.cljc:750)
+	at datascript.query$q.doInvoke(query.cljc:735)
+	at clojure.lang.RestFn.applyTo(RestFn.java:139)
+	at clojure.core$apply.invokeStatic(core.clj:661)
+	at clojure.core$apply.invoke(core.clj:652)
+	at arachne.core.config.impl.datascript.DatascriptConfig.query_(datascript.clj:73)
+	at arachne.core.config.impl.multiplex.MultiplexedConfig.query_(multiplex.clj:85)
+	at arachne.core.config$q.invokeStatic(config.clj:92)
+	at arachne.core.config$q.doInvoke(config.clj:87)
+	at clojure.lang.RestFn.invoke(RestFn.java:464)
+	at arachne.http.config$find_server_dependencies.invokeStatic(config.clj:21)
+	at arachne.http.config$find_server_dependencies.invoke(config.clj:19)
+	at arachne.http.config$add_server_dependencies.invokeStatic(config.clj:33)
+	at arachne.http.config$add_server_dependencies.invoke(config.clj:31)
+	at clojure.lang.PersistentVector.reduce(PersistentVector.java:341)
+	at clojure.core$reduce.invokeStatic(core.clj:6702)
+	at clojure.core$reduce.invoke(core.clj:6685)
+	at arachne.http.config$add_endpoint_dependencies.invokeStatic(config.clj:49)
+	at arachne.http.config$add_endpoint_dependencies.invoke(config.clj:45)
+	at arachne.http$configure.invokeStatic(http.clj:17)
+	at arachne.http$configure.invoke(http.clj:14)
+	at arachne.core.module$configure.invokeStatic(module.clj:134)
+	at arachne.core.module$configure.invoke(module.clj:128)
+	at arachne.core$build_config$fn__2848.invoke(core.clj:32)
+	at clojure.core.protocols$fn__8889.invokeStatic(protocols.clj:167)
+	at clojure.core.protocols$fn__8889.invoke(protocols.clj:124)
+	at clojure.core.protocols$fn__8844$G__8839__8853.invoke(protocols.clj:19)
+	at clojure.core.protocols$seq_reduce.invokeStatic(protocols.clj:31)
+	at clojure.core.protocols$fn__8872.invokeStatic(protocols.clj:75)
+	at clojure.core.protocols$fn__8872.invoke(protocols.clj:75)
+	at clojure.core.protocols$fn__8818$G__8813__8831.invoke(protocols.clj:13)
+	at clojure.core$reduce.invokeStatic(core.clj:6703)
+	at clojure.core$reduce.invoke(core.clj:6685)
+	at arachne.core$build_config.invokeStatic(core.clj:32)
+	at arachne.core$build_config.invoke(core.clj:20)
+	at arachne.http.config_test$fn__2855.invokeStatic(config_test.clj:24)
+	at arachne.http.config_test$fn__2855.invoke(config_test.clj:23)
+	at clojure.test$test_var$fn__10231.invoke(test.clj:716)
+	at clojure.test$test_var.invokeStatic(test.clj:716)
+	at clojure.test$test_var.invoke(test.clj:707)
+	at clojure.test$test_vars$fn__10257$fn__10262.invoke(test.clj:734)
+	at clojure.test$default_fixture.invokeStatic(test.clj:686)
+	at clojure.test$default_fixture.invoke(test.clj:682)
+	at clojure.test$test_vars$fn__10257.invoke(test.clj:734)
+	at clojure.test$default_fixture.invokeStatic(test.clj:686)
+	at clojure.test$default_fixture.invoke(test.clj:682)
+	at clojure.test$test_vars.invokeStatic(test.clj:730)
+	at clojure.test$test_vars.invoke(test.clj:722)
+	at pod$test_ns_STAR_$run_tests_STAR___525.invoke(NO_SOURCE_FILE:0)
+	at pod$test_ns_STAR_.invokeStatic(NO_SOURCE_FILE:0)
+	at pod$test_ns_STAR_.invoke(NO_SOURCE_FILE:0)
+	at clojure.core$partial$fn__6607.invoke(core.clj:2603)
+	at clojure.core$map$fn__6631.invoke(core.clj:2727)
+	at clojure.lang.LazySeq.sval(LazySeq.java:40)
+	- locked <0x00000006c163f7d0> (a clojure.lang.LazySeq)
+	at clojure.lang.LazySeq.seq(LazySeq.java:49)
+	- locked <0x00000006c163f7d0> (a clojure.lang.LazySeq)
+	at clojure.lang.RT.seq(RT.java:525)
+	at clojure.core$seq__6172.invokeStatic(core.clj:137)
+	at clojure.core.protocols$seq_reduce.invokeStatic(protocols.clj:24)
+	at clojure.core.protocols$fn__8872.invokeStatic(protocols.clj:75)
+	at clojure.core.protocols$fn__8872.invoke(protocols.clj:75)
+	at clojure.core.protocols$fn__8818$G__8813__8831.invoke(protocols.clj:13)
+	at clojure.core$reduce.invokeStatic(core.clj:6699)
+	at clojure.core$reduce.invoke(core.clj:6685)
+	at pod$eval3076.invokeStatic(NO_SOURCE_FILE:0)
+	at pod$eval3076.invoke(NO_SOURCE_FILE)
+	at clojure.lang.Compiler.eval(Compiler.java:6946)
+	at clojure.lang.Compiler.eval(Compiler.java:6936)
+	at clojure.lang.Compiler.eval(Compiler.java:6909)
+	at clojure.core$eval.invokeStatic(core.clj:3186)
+	at clojure.core$eval.invoke(core.clj:3182)
+	at boot.pod$eval_in_STAR_.invoke(pod.clj:437)
+	at clojure.lang.Var.invoke(Var.java:379)
+	at org.projectodd.shimdandy.impl.ClojureRuntimeShimImpl.invoke(ClojureRuntimeShimImpl.java:109)
+	at org.projectodd.shimdandy.impl.ClojureRuntimeShimImpl.invoke(ClojureRuntimeShimImpl.java:102)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at clojure.lang.Reflector.invokeMatchingMethod(Reflector.java:93)
+	at clojure.lang.Reflector.invokeInstanceMethod(Reflector.java:28)
+	at boot.pod$eval_in_STAR_.invoke(pod.clj:440)
+	at adzerk.boot_test$eval210$fn__211$fn__218$fn__219.invoke(boot_test.clj:102)
+	at boot.core$run_tasks.invoke(core.clj:938)
+	at boot.core$boot$fn__933.invoke(core.clj:948)
+	at clojure.core$binding_conveyor_fn$fn__4444.invoke(core.clj:1916)
+	at clojure.lang.AFn.call(AFn.java:18)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+"Service Thread" #9 daemon prio=9 os_prio=31 tid=0x00007fb44c037000 nid=0x5203 runnable [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"C1 CompilerThread3" #8 daemon prio=9 os_prio=31 tid=0x00007fb44a014800 nid=0x5003 waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"C2 CompilerThread2" #7 daemon prio=9 os_prio=31 tid=0x00007fb44a00c000 nid=0x4e03 waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"C2 CompilerThread1" #6 daemon prio=9 os_prio=31 tid=0x00007fb44a00b000 nid=0x4c03 waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"C2 CompilerThread0" #5 daemon prio=9 os_prio=31 tid=0x00007fb44d050000 nid=0x4a03 waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Signal Dispatcher" #4 daemon prio=9 os_prio=31 tid=0x00007fb44a001000 nid=0x3e0f runnable [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Finalizer" #3 daemon prio=8 os_prio=31 tid=0x00007fb44c034800 nid=0x3803 in Object.wait() [0x0000700000d3a000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:142)
+	- locked <0x00000006c008c7c8> (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:158)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:209)
+
+"Reference Handler" #2 daemon prio=10 os_prio=31 tid=0x00007fb44d022800 nid=0x3603 in Object.wait() [0x0000700000c37000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:157)
+	- locked <0x00000006c0086c20> (a java.lang.ref.Reference$Lock)
+
+"main" #1 prio=5 os_prio=31 tid=0x00007fb449808800 nid=0xd07 waiting on condition [0x0000700000218000]
+   java.lang.Thread.State: WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000006c0bd3018> (a java.util.concurrent.FutureTask)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.FutureTask.awaitDone(FutureTask.java:429)
+	at java.util.concurrent.FutureTask.get(FutureTask.java:191)
+	at clojure.core$deref_future.invoke(core.clj:2186)
+	at clojure.core$future_call$reify__6736.deref(core.clj:6683)
+	at clojure.core$deref.invoke(core.clj:2206)
+	at boot.core$boot.doInvoke(core.clj:945)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at boot.user$eval293.invoke(boot.user2697197299054812144.clj:15)
+	at clojure.lang.Compiler.eval(Compiler.java:6782)
+	at clojure.lang.Compiler.load(Compiler.java:7227)
+	at clojure.lang.Compiler.loadFile(Compiler.java:7165)
+	at clojure.lang.RT$3.invoke(RT.java:319)
+	at boot.main$_main$fn__1716.invoke(main.clj:196)
+	at boot.main$_main.invoke(main.clj:196)
+	at clojure.lang.Var.invoke(Var.java:394)
+	at org.projectodd.shimdandy.impl.ClojureRuntimeShimImpl.invoke(ClojureRuntimeShimImpl.java:159)
+	at org.projectodd.shimdandy.impl.ClojureRuntimeShimImpl.invoke(ClojureRuntimeShimImpl.java:150)
+	at boot.App.runBoot(App.java:399)
+	at boot.App.main(App.java:488)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at Boot.main(Boot.java:258)
+
+"VM Thread" os_prio=31 tid=0x00007fb44c034000 nid=0x3403 runnable 
+
+"GC task thread#0 (ParallelGC)" os_prio=31 tid=0x00007fb44c004800 nid=0x1c07 runnable 
+
+"GC task thread#1 (ParallelGC)" os_prio=31 tid=0x00007fb44c005000 nid=0x2613 runnable 
+
+"GC task thread#2 (ParallelGC)" os_prio=31 tid=0x00007fb44c005800 nid=0x2803 runnable 
+
+"GC task thread#3 (ParallelGC)" os_prio=31 tid=0x00007fb449809000 nid=0x2a03 runnable 
+
+"GC task thread#4 (ParallelGC)" os_prio=31 tid=0x00007fb44a007800 nid=0x2c03 runnable 
+
+"GC task thread#5 (ParallelGC)" os_prio=31 tid=0x00007fb44c006800 nid=0x2e03 runnable 
+
+"GC task thread#6 (ParallelGC)" os_prio=31 tid=0x00007fb449813000 nid=0x3003 runnable 
+
+"GC task thread#7 (ParallelGC)" os_prio=31 tid=0x00007fb44c800000 nid=0x3203 runnable 
+
+"VM Periodic Task Thread" os_prio=31 tid=0x00007fb44a035800 nid=0x5403 waiting on condition 
+
+JNI global references: 187
+
