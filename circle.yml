@@ -1,6 +1,8 @@
 machine:
   environment:
     BOOT_JVM_OPTIONS: "-Xmx3g"
+  java:
+    version: oraclejdk8
 dependencies:
   cache_directories:
     - ~/.boot
