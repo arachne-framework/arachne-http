@@ -1,4 +1,5 @@
 (ns arachne.http.config
+  "Utilities for working with HTTP entities in a configuration"
   (:require [arachne.core.config :as cfg]))
 
 (def route-rules
@@ -17,37 +18,18 @@
      (routes ?ancestor ?route)
      [?endpoint :arachne.http.endpoint/route ?route]]])
 
-(defn- servers
+(defn servers
+  "Find the eids of all the servers in the given configuration"
   [cfg]
   (cfg/q cfg '[:find [?server ...]
                :where
                [?server :arachne.http.server/port _]]))
 
-(defn- find-server-dependencies
+(defn find-endpoints
+  "Given a server eid, find the eids of all endpoints in that server"
   [cfg server-eid]
-  (cfg/q cfg '[:find [?impl ...]
+  (cfg/q cfg '[:find [?endpoint ...]
                :in $ ?server %
                :where
-               (endpoints ?server ?endpoint)
-               [?endpoint :arachne.http.endpoint/implementation ?impl]]
+               (endpoints ?server ?endpoint)]
     server-eid route-rules))
-
-(defn- add-server-dependencies
-  [cfg server-eid]
-  (let [dep-eids (find-server-dependencies cfg server-eid)
-        deps (map (fn [dep-eid]
-                    {:arachne.component.dependency/entity dep-eid
-                     :arachne.component.dependency/key
-                     (keyword (str "endpoint-" dep-eid))})
-               dep-eids)]
-    (if (empty? deps)
-      cfg
-      (cfg/update cfg
-        [{:db/id server-eid
-          :arachne.component/dependencies deps}]))))
-
-(defn add-endpoint-dependencies
-  "Add every endpoint implementation as a direct dependency of its associated
-  server"
-  [cfg]
-  (reduce add-server-dependencies cfg (servers cfg)))

@@ -27,7 +27,6 @@
                  (core/runtime :test/rt [:test/server])
 
                  (core/component :test/handler-1 {} 'test/ctor)
-                 (core/component :test/handler-2 {} 'test/ctor)
                  (core/component :test/handler-3 {} 'test/ctor)
 
                  (http/server :test/server 8080
@@ -36,7 +35,10 @@
 
                    (http/context "/a/b/"
 
-                     (http/endpoint #{:get :head} "/c/*" :test/handler-2)
+                     (http/endpoint :get :head "/c/*"
+                       (core/component :test/handler-2 {} 'test/ctor)
+                       :handler-2-name)
+
                      (http/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3)))))]
 
     (is (= 1 (cfg/q cfg '[:find (count ?r) .
@@ -56,16 +58,14 @@
 
                      [?end1 :arachne.http.endpoint/name :the-root]
                      [?end1 :arachne.http.endpoint/methods :get]
-                     [?end1 :arachne.http.endpoint/implementation ?i1]
-                     [?i1 :arachne/id :test/handler-1]
+                     [?end1 :arachne/id :test/handler-1]
                      [?end1 :arachne.http.endpoint/route ?server]
                      [?server :arachne.http.server/port 8080]
 
-                     [?end2 :arachne.http.endpoint/name :test/handler-2]
+                     [?end2 :arachne.http.endpoint/name :handler-2-name]
                      [?end2 :arachne.http.endpoint/methods :get]
                      [?end2 :arachne.http.endpoint/methods :head]
-                     [?end2 :arachne.http.endpoint/implementation ?i2]
-                     [?i2 :arachne/id :test/handler-2]
+                     [?end2 :arachne/id :test/handler-2]
                      [?end2 :arachne.http.endpoint/route ?w]
                      [?w :arachne.http.route-segment/wildcard true]
                      [?w :arachne.http.route-segment/parent ?c]
@@ -78,8 +78,7 @@
 
                      [?end3 :arachne.http.endpoint/name :test/handler-3]
                      [?end3 :arachne.http.endpoint/methods :get]
-                     [?end3 :arachne.http.endpoint/implementation ?i3]
-                     [?i3 :arachne/id :test/handler-3]
+                     [?end3 :arachne/id :test/handler-3]
                      [?end3 :arachne.http.endpoint/route ?e]
                      [?e :arachne.http.route-segment/pattern "e"]
                      [?e :arachne.http.route-segment/parent ?d]

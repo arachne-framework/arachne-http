@@ -18,8 +18,10 @@
 (s/def ::http-method #{:options :get :head :post :put :delete :trace :connect})
 
 (s/fdef arachne.http.dsl/endpoint
-  :args (s/cat :method (s/? ::http-method)
-               :methods (s/? (s/coll-of ::http-method :min-count 1))
-               :path string?
-               :impl ::cspec/id
-               :name (s/? keyword?)))
+  :args (s/cat
+          :methods (s/+ ::http-method)
+          :path string?
+          :identity (s/alt
+                      :by-eid (s/cat :eid pos-int? :name keyword?)
+                      :by-arachne-id (s/cat :arachne-id ::cspec/id
+                                       :name (s/? keyword?)))))

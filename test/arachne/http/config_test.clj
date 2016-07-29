@@ -20,18 +20,10 @@
                    (http/endpoint :get "a/b/c/d" :test/handler-2)
                    (http/endpoint :get "a/b/x/y" :test/handler-3))))
 
-(deftest find-server-dependencies
+(deftest find-endpoints
   (let [cfg (core/build-config "test" '[:org.arachne-framework/arachne-http]
               cfg-init)
         servers (@#'http-cfg/servers cfg)
-        deps (@#'http-cfg/find-server-dependencies cfg (first servers))]
+        deps (@#'http-cfg/find-endpoints cfg (first servers))]
     (is (= 1 (count servers)))
     (is (= 3 (count deps)))))
-
-(deftest server-dependencies-are-added
-  (let [cfg (core/build-config "test" '[:org.arachne-framework/arachne-http]
-              cfg-init)]
-    (is (= 3 (cfg/q cfg '[:find (count ?dep) .
-                          :where
-                          [?server :arachne.http.server/port 8080]
-                          [?server :arachne.component/dependencies ?dep]])))))

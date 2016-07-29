@@ -14,4 +14,4 @@
 (defn configure
   "Configure the core module"
   [cfg]
-  (http-cfg/add-endpoint-dependencies cfg))
+  cfg)
