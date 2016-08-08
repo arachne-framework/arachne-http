@@ -149,21 +149,24 @@
     (path-segments path)))
 
 (defn endpoint
-  "Define a HTTP endpoint with the given method(s), path and implementation
-  component. Returns the resolved EID of the given component."
+  "Define a HTTP endpoint with the given method(s), path and either an Arachne
+  ID or the entity ID of a component that implements the endpoint. Returns the
+  resolved EID of the given component."
   [& args]
   (apply util/validate-args `endpoint args)
-  (let [args (s/conform (:args (s/get-spec `endpoint)) args)
-        methods (or (:methods args) #{(:method args)})
-        name (or (:name args) (:impl args))
-        path (with-context (:path args))
+  (let [conformed (s/conform (:args (s/get-spec `endpoint)) args)
+        methods (set (:methods conformed))
+        arachne-id (-> conformed :identity val :arachne-id)
+        name (or (-> conformed :identity val :name)
+               arachne-id)
+        path (with-context (:path conformed))
+        segment (ensure-path path)
+        eid (-> conformed :identity val :eid)
         tid (cfg/tempid)
-        segment (ensure-path path)]
-    (cfg/resolve-tempid (script/transact
-                          [{:db/id tid
-                            :arachne.http.endpoint/route segment
-                            :arachne.http.endpoint/name name
-                            :arachne.http.endpoint/methods methods
-                            :arachne.http.endpoint/implementation
-                            {:arachne/id (:impl args)}}])
-      tid)))
+        new-cfg (script/transact
+                  [(util/mkeep {:db/id (or eid tid)
+                                :arachne/id arachne-id
+                                :arachne.http.endpoint/route segment
+                                :arachne.http.endpoint/name name
+                                :arachne.http.endpoint/methods methods})])]
+    (or eid (cfg/resolve-tempid new-cfg tid))))
