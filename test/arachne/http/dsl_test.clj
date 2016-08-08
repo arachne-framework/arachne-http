@@ -4,7 +4,7 @@
             [arachne.core.config :as cfg]))
 
 (deftest plain-server
-  (let [cfg (core/build-config "test" '[:org.arachne-framework/arachne-http]
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
               '(do
                  (require '[arachne.core.dsl :as core])
                  (require '[arachne.http.dsl :as http])
@@ -18,7 +18,7 @@
 
 
 (deftest basic-endpoints
-  (let [cfg (core/build-config "test" '[:org.arachne-framework/arachne-http]
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
               '(do
 
                  (require '[arachne.core.dsl :as core])
