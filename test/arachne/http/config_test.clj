@@ -21,8 +21,7 @@
                    (http/endpoint :get "a/b/x/y" :test/handler-3))))
 
 (deftest find-endpoints
-  (let [cfg (core/build-config "test" '[:org.arachne-framework/arachne-http]
-              cfg-init)
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] cfg-init)
         servers (@#'http-cfg/servers cfg)
         deps (@#'http-cfg/find-endpoints cfg (first servers))]
     (is (= 1 (count servers)))
