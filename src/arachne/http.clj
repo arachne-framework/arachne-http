@@ -4,14 +4,19 @@
             [arachne.http.schema :as schema]))
 
 (defprotocol Handler
-  (handler [this] "Return a Ring-style request handler function"))
+  "A logical Ring-style request handler which is also an Arachne component that
+  can have dependencies, etc."
+  (handle [this request] "Given a Ring-style request map, return a Ring-style
+  response"))
 
 (defn schema
-  "Return the schema for the core module"
+  "Return the schema for the arachne.http module"
   []
   schema/schema)
 
 (defn configure
-  "Configure the core module"
+  "Configure the arachne.http module"
   [cfg]
   cfg)
+
+
