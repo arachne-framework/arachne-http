@@ -1,7 +1,7 @@
 (ns arachne.http.dsl
   (:require [arachne.core.config :as cfg]
             [arachne.core.util :as util]
-            [arachne.core.config.init :as script]
+            [arachne.core.config.init :as script :refer [defdsl]]
             [arachne.http.dsl.specs]
             [clojure.spec :as s]
             [clojure.string :as str]))
@@ -14,11 +14,10 @@
   "The path bound in the current context."
   nil)
 
-(defn create-server
+(defdsl create-server
   "Define an Arachne server entity with the given Arachne ID and port. Return
   the tempid of the new server."
   [arachne-id port]
-  (util/validate-args `create-server arachne-id port)
   (let [server-tid (cfg/tempid)
         new-cfg (script/transact [{:db/id server-tid
                                    :arachne/id arachne-id
@@ -148,12 +147,11 @@
         {:action "build a routing tree", :path path}))
     (path-segments path)))
 
-(defn endpoint
+(defdsl endpoint
   "Define a HTTP endpoint with the given method(s), path and either an Arachne
   ID or the entity ID of a component that implements the endpoint. Returns the
   resolved EID of the given component."
   [& args]
-  (apply util/validate-args `endpoint args)
   (let [conformed (s/conform (:args (s/get-spec `endpoint)) args)
         methods (set (:methods conformed))
         arachne-id (-> conformed :identity val :arachne-id)
