@@ -10,7 +10,12 @@
                  (require '[arachne.http.dsl :as http])
 
                  (core/runtime :test/rt [:test/server])
-                 (http/server :test/server 8080)))]
+                 (http/server :test/server 8080)
+
+                 (core/transact [{:arachne/id :test/server
+                                  :arachne.component/constructor :test/constructor}])
+
+                 ))]
     (is (= {:arachne/id :test/server
             :arachne.http.server/port 8080}
           (cfg/pull cfg [:arachne.http.server/port :arachne/id]
@@ -39,7 +44,10 @@
                        (core/component :test/handler-2 {} 'test/ctor)
                        :handler-2-name)
 
-                     (http/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3)))))]
+                     (http/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3)))
+
+                 (core/transact [{:arachne/id :test/server
+                                  :arachne.component/constructor :test/constructor}])))]
 
     (is (= 1 (cfg/q cfg '[:find (count ?r) .
                           :where [?r :arachne.http.route-segment/pattern "a"]])))
