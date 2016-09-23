@@ -14,7 +14,7 @@
     (o/class :arachne.http/RouteSegment []
       "A route segment; a node in a routing tree structure"
       (o/attr :arachne.http.route-segment/parent
-        :one :arachne.http/RouteSegment
+        :one-or-none :arachne.http/RouteSegment
         "The parent route segment")
       (o/attr :arachne.http.route-segment/pattern
         :one-or-none :string

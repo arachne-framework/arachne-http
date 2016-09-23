@@ -1,7 +1,8 @@
 (ns arachne.http
   (:require [arachne.core.util :as util]
             [arachne.http.config :as http-cfg]
-            [arachne.http.schema :as schema]))
+            [arachne.http.schema :as schema]
+            [arachne.http.validators :as v]))
 
 (defprotocol Handler
   "A logical Ring-style request handler which is also an Arachne component that
@@ -17,6 +18,4 @@
 (defn configure
   "Configure the arachne.http module"
   [cfg]
-  cfg)
-
-
+  (v/add-validators cfg))
