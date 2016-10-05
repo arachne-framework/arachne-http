@@ -25,3 +25,9 @@
                       :by-eid (s/cat :eid pos-int? :name keyword?)
                       :by-arachne-id (s/cat :arachne-id ::cspec/id
                                        :name (s/? keyword?)))))
+
+(s/fdef arachne.http.dsl/handler
+  :args (s/cat
+          :arachne-id ::cspec/id
+          :dependencies ::cspec/dependency-map
+          :handler (s/and symbol? namespace)))

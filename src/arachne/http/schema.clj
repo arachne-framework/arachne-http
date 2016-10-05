@@ -39,4 +39,9 @@
         "Unique ID of an endpoint (used for URL generation)")
       (o/attr :arachne.http.endpoint/methods
         :one-or-more :keyword
-        "One or more HTTP methods that this endpoint will respond to. Values should be in #{:options :get :head :post :put :delete :trace :connect}"))))
+        "One or more HTTP methods that this endpoint will respond to. Values should be in #{:options :get :head :post :put :delete :trace :connect}"))
+
+    (o/class :arachne.http/Handler [:arachne/Component]
+      "A handler component that delegates request handling to a named Ring handler function"
+      (o/attr :arachne.http.handler/fn :one :keyword
+        "Ring handler function that will service requests to this handler"))))

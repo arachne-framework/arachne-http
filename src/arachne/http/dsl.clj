@@ -168,3 +168,24 @@
                                 :arachne.http.endpoint/name name
                                 :arachne.http.endpoint/methods methods})])]
     (or eid (cfg/resolve-tempid new-cfg tid))))
+
+(defdsl handler
+  "Defines a HTTP request handler component that uses a simple Ring-style
+  request handler function. Allows users to specify a map set of dependencies,
+  which are associated on to the request before it is passed to the handler
+  function."
+  [arachne-id dependencies handler-fn]
+  (let [tid (cfg/tempid)
+        deps (map (fn [[id key]]
+                    {:arachne.component.dependency/entity {(if (keyword? id)
+                                                             :arachne/id
+                                                             :db/id) id}
+                     :arachne.component.dependency/key key})
+               dependencies)
+        txmap (util/mkeep
+                {:db/id tid
+                 :arachne/id arachne-id
+                 :arachne.component/constructor :arachne.http/handler-component
+                 :arachne.component/dependencies deps
+                 :arachne.http.handler/fn (keyword handler-fn)})]
+    (cfg/resolve-tempid (script/transact [txmap]) tid)))
