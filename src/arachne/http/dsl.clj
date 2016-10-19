@@ -3,6 +3,7 @@
             [arachne.core.util :as util]
             [arachne.core.config.init :as script :refer [defdsl]]
             [arachne.http.dsl.specs]
+            [arachne.error :as e :refer [error deferror]]
             [clojure.spec :as s]
             [clojure.string :as str]))
 
@@ -29,7 +30,7 @@
   the server bound as the context server. Returns the eid of the Server
   component."
   [arachne-id port & body]
-  (apply util/validate-args `server arachne-id port body)
+  (apply e/assert-args `server arachne-id port body)
   `(let [server-eid# (create-server ~arachne-id ~port)]
      (binding [*context-server* server-eid#]
        ~@body)
@@ -131,8 +132,12 @@
                             :arachne.http.route-segment/parent parent-eid)])
         tid))))
 
-(util/deferror ::not-in-server-context
-  "Could not :action outside a server context. Make sure you are evaluating this inside a `server` macro (or with *context-server* otherwise bound).")
+(deferror ::not-in-server-context
+  :message "Cannot build routes outside a server context."
+  :explanation "You used a DSL form that attempted to define HTTP routes for `:path`. However, this is only applicable inside of a `arachne.http.dsl/server` macro."
+  :suggestions ["Check the stacktrace to see what DSL function you were evaluating when this error was thrown"
+                "Make sure you only invoke route-building DSL functions from inside a `arachne.http.dsl/server` form."
+                "If you're building your own DSL extensions, make sure that `arachne.http.dsl/*context-server*` is bound"])
 
 (defn ensure-path
   "Given a path (as a string), ensure that all of the corresponding routing
@@ -143,8 +148,7 @@
   (reduce ensure-segment
     (if *context-server*
       *context-server*
-      (util/error ::not-in-server-context
-        {:action "build a routing tree", :path path}))
+      (error ::not-in-server-context {:path path}))
     (path-segments path)))
 
 (defdsl endpoint
