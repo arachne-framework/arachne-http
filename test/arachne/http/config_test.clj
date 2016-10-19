@@ -44,7 +44,7 @@
                      :arachne.http.endpoint/name :test/frob-handler
                      :arachne.component/constructor :no.such/constructor
                      :arachne.http.endpoint/route server}])))]
-        (is (thrown-with-msg? clojure.lang.ExceptionInfo #"1 errors while validating"
+        (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
               (v/validate cfg')))))
 
 (deftest route-segment-validation
@@ -55,10 +55,10 @@
                      [{:db/id server
                        :arachne/id :test/server}
                       {:arachne.http.route-segment/parent server}])))]
-      (is (thrown-with-msg? clojure.lang.ExceptionInfo #"1 errors while validating"
+      (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
             (v/validate cfg'))))
     (let [cfg' (cfg/with-provenance :test `route-segment-validation
                  (init/apply-initializer cfg
                    [{:arachne.http.route-segment/pattern "foo"}]))]
-      (is (thrown-with-msg? clojure.lang.ExceptionInfo #"1 errors while validating"
+      (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
             (v/validate cfg'))))))
