@@ -1,17 +1,17 @@
 (ns arachne.http.schema
   (:require [arachne.core.config :refer [tempid]]
-            [arachne.core.config.ontology :as o]))
+            [arachne.core.config.model :as o]))
 
 (def schema
   (concat
 
-    (o/class :arachne.http/Server [:arachne/Component
+    (o/type :arachne.http/Server [:arachne/Component
                                    :arachne.http/RouteSegment]
       "An abstract HTTP server"
       (o/attr :arachne.http.server/port :one :long
         "The network port upon which to run a HTTP server"))
 
-    (o/class :arachne.http/RouteSegment []
+    (o/type :arachne.http/RouteSegment []
       "A route segment; a node in a routing tree structure"
       (o/attr :arachne.http.route-segment/parent
         :one-or-none :arachne.http/RouteSegment
@@ -29,7 +29,7 @@
         :one-or-none :string
         "A regular expression constraining the value of a param or wildcard segment."))
 
-    (o/class :arachne.http/Endpoint [:arachne/Component]
+    (o/type :arachne.http/Endpoint [:arachne/Component]
       "A resolveable HTTP endpoint. The concrete type that this entails at runtime is implementation-specific, although all implementations should support instances of arachne.http.Handler as a least common denominator."
       (o/attr :arachne.http.endpoint/route
         :one :arachne.http/RouteSegment
@@ -41,7 +41,7 @@
         :one-or-more :keyword
         "One or more HTTP methods that this endpoint will respond to. Values should be in #{:options :get :head :post :put :delete :trace :connect}"))
 
-    (o/class :arachne.http/Handler [:arachne/Component]
+    (o/type :arachne.http/Handler [:arachne/Component]
       "A handler component that delegates request handling to a named Ring handler function"
       (o/attr :arachne.http.handler/fn :one :keyword
         "Ring handler function that will service requests to this handler"))))

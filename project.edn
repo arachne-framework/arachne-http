@@ -3,7 +3,7 @@
  :description "The abstract HTTP module for the Arachne web framework"
  :license {"Apache Software License 2.0" "http://www.apache.org/licenses/LICENSE-2.0"}
  :deps [[org.clojure/clojure "1.9.0-alpha12" :scope "provided"]
-        [org.arachne-framework/arachne-core "0.1.0-master-0057-ad6d720"]
+        [org.arachne-framework/arachne-core "0.1.0-master-0059-580c9cf"]
         [adzerk/boot-test "1.1.2" :scope "test"]
         [org.clojure/test.check "0.9.0" :scope "test"]
         [org.clojure/tools.namespace "0.2.11" :scope "test"]

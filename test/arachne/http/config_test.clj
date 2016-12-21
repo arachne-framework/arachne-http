@@ -45,7 +45,7 @@
                      :arachne.component/constructor :no.such/constructor
                      :arachne.http.endpoint/route server}])))]
         (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
-              (v/validate cfg')))))
+              (v/validate cfg' true)))))
 
 (deftest route-segment-validation
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http] cfg-init)]
@@ -56,9 +56,9 @@
                        :arachne/id :test/server}
                       {:arachne.http.route-segment/parent server}])))]
       (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
-            (v/validate cfg'))))
+            (v/validate cfg' true))))
     (let [cfg' (cfg/with-provenance :test `route-segment-validation
                  (init/apply-initializer cfg
                    [{:arachne.http.route-segment/pattern "foo"}]))]
       (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
-            (v/validate cfg'))))))
+            (v/validate cfg' true))))))
