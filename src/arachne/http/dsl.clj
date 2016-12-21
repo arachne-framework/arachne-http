@@ -193,3 +193,27 @@
                  :arachne.component/dependencies deps
                  :arachne.http.handler/fn (keyword handler-fn)})]
     (cfg/resolve-tempid (script/transact [txmap]) tid)))
+
+
+(comment
+
+  ;; Declarative approach:
+
+  (migration :a/a :a/b
+    (type :my/Person
+      (attr :my.person/id :string)))
+
+  (migration :a/b :a/c
+    (type :my/Person
+      (attr :my.person/id :uuid)))
+
+
+  (migration :a/b :a/c
+    (type :my/Person
+      (attr :my.person/id :string)))
+
+
+
+
+
+  )

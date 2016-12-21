@@ -1,7 +1,7 @@
 (ns arachne.http.validators
   (:require [arachne.core.config :as cfg]
             [arachne.core.config.validation :as v]
-            [arachne.core.config.ontology :as ont]
+            [arachne.core.config.model :as ont]
             [arachne.error :as e :refer [error deferror]]
             [arachne.core.util :as util]))
 
@@ -54,7 +54,7 @@
                               :in $ %
                               :where
                               [?rs-cls :db/ident :arachne.http/RouteSegment]
-                              (class ?rs-cls ?rs)]
+                              (type ?rs-cls ?rs)]
                    ont/rules)]
     (for [segment segments]
       (let [s (cfg/pull cfg '[*] segment)]
