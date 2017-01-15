@@ -123,7 +123,7 @@
   "Given a parent entity ID and a partial entity map, ensure that the segment
   exists in the context configuration, returing its concrete entity ID."
   [parent-eid segment-map]
-  (if-let [existing (find-segment @script/*config* parent-eid segment-map)]
+  (if-let [existing (find-segment (script/context-config) parent-eid segment-map)]
     (:db/id existing)
     (let [tid (cfg/tempid)]
       (cfg/resolve-tempid
