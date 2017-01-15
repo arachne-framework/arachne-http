@@ -15,27 +15,6 @@
   "The path bound in the current context."
   nil)
 
-(defdsl create-server
-  "Define an Arachne server entity with the given Arachne ID and port. Return
-  the tempid of the new server."
-  [arachne-id port]
-  (let [server-tid (cfg/tempid)
-        new-cfg (script/transact [{:db/id server-tid
-                                   :arachne/id arachne-id
-                                   :arachne.http.server/port port}])]
-    (cfg/resolve-tempid new-cfg server-tid)))
-
-(defmacro server
-  "Define a HTTP server in the current configuration. Evaluates the body with
-  the server bound as the context server. Returns the eid of the Server
-  component."
-  [arachne-id port & body]
-  (apply e/assert-args `server arachne-id port body)
-  `(let [server-eid# (create-server ~arachne-id ~port)]
-     (binding [*context-server* server-eid#]
-       ~@body)
-     server-eid#))
-
 (defn with-context
   "Given a path, return a path including any existing context path"
   [path]

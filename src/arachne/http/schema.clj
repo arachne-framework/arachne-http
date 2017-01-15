@@ -5,8 +5,7 @@
 (def schema
   (concat
 
-    (o/type :arachne.http/Server [:arachne/Component
-                                   :arachne.http/RouteSegment]
+    (o/type :arachne.http/Server [:arachne/Component :arachne.http/RouteSegment]
       "An abstract HTTP server"
       (o/attr :arachne.http.server/port :one :long
         "The network port upon which to run a HTTP server"))
@@ -41,7 +40,7 @@
         :one-or-more :keyword
         "One or more HTTP methods that this endpoint will respond to. Values should be in #{:options :get :head :post :put :delete :trace :connect}"))
 
-    (o/type :arachne.http/Handler [:arachne/Component]
+    (o/type :arachne.http/Handler [:arachne.http/Endpoint]
       "A handler component that delegates request handling to a named Ring handler function"
       (o/attr :arachne.http.handler/fn :one :keyword
         "Ring handler function that will service requests to this handler"))))

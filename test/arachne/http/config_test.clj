@@ -4,37 +4,35 @@
             [arachne.core.config.validation :as v]
             [arachne.core :as core]
             [arachne.core.config :as cfg]
-            [arachne.core.config.init :as init]))
+            [arachne.core.config.init :as init]
 
-(def cfg-init '(do
-                 (require '[arachne.core.dsl :as core])
-                 (require '[arachne.http.dsl :as http])
+            [arachne.http.dsl-test :as dsltest]
+            [arachne.core.dsl :as a]
+            [arachne.http.dsl :as h]))
 
-                 (core/runtime :test/rt [:test/server])
+(defn test-cfg []
 
-                 (core/component :test/handler-1 {} 'test/ctor)
-                 (core/component :test/handler-2 {} 'test/ctor)
-                 (core/component :test/handler-3 {} 'test/ctor)
+  (a/runtime :test/rt [:test/server])
 
-                 (http/server :test/server 8080
+  (a/component :test/handler-1 {} 'test/ctor)
+  (a/component :test/handler-2 {} 'test/ctor)
+  (a/component :test/handler-3 {} 'test/ctor)
 
-                   (http/endpoint :get "/" :test/handler-1)
-                   (http/endpoint :get "a/b/c/d" :test/handler-2)
-                   (http/endpoint :get "a/b/x/y" :test/handler-3))
+  (dsltest/dummy-server :test/server 8080
 
-                 (core/transact
-                   [{:arachne/id :test/server
-                     :arachne.component/constructor :no.such/constructor}])))
+    (h/endpoint :get "/" :test/handler-1)
+    (h/endpoint :get "a/b/c/d" :test/handler-2)
+    (h/endpoint :get "a/b/x/y" :test/handler-3)))
 
 (deftest find-endpoints
-  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] cfg-init)
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))
         servers (@#'http-cfg/servers cfg)
         deps (@#'http-cfg/find-endpoints cfg (first servers))]
     (is (= 1 (count servers)))
     (is (= 3 (count deps)))))
 
 (deftest method-validation
-  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] cfg-init)
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))
         cfg' (cfg/with-provenance :test `method-validation
                (init/apply-initializer cfg
                  (let [server (cfg/tempid)]
@@ -48,7 +46,7 @@
               (v/validate cfg' true)))))
 
 (deftest route-segment-validation
-  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] cfg-init)]
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))]
     (let [cfg' (cfg/with-provenance :test `route-segment-validation
                  (init/apply-initializer cfg
                    (let [server (cfg/tempid)]
