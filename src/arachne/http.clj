@@ -36,4 +36,6 @@
 (defn configure
   "Configure the arachne.http module"
   [cfg]
-  (v/add-validators cfg))
+  (-> cfg
+    (v/add-validators)
+    (http-cfg/infer-endpoint-names)))

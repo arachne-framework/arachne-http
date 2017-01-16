@@ -4,30 +4,27 @@
             [arachne.core.config :as cfg]
             [arachne.core.dsl :as a]
             [arachne.http.dsl :as h]
-            [arachne.core.config.init :as script :refer [defdsl]]
-            [arachne.core.dsl.specs :as cspec]
+            [arachne.core.config.script :as script :refer [defdsl]]
             [arachne.error :as e]
-            [clojure.spec :as s]))
-
-(s/fdef create-dummy-server
-  :args (s/cat :arachne-id ::cspec/id
-          :port integer?))
+            [clojure.spec :as s])
+  (:import (arachne ArachneException)))
 
 (s/fdef dummy-server
-  :args (s/cat :arachne-id ::cspec/id
+  :args (s/cat :arachne-id ::a/arachne-id
           :port integer?
           :body (s/* any?)))
 
 (defdsl create-dummy-server
   "Define a dummy Arachne server entity with the given Arachne ID and port. Return
   the tempid of the new server."
+  (s/cat :arachne-id ::a/arachne-id :port integer?)
   [arachne-id port]
-  (let [server-tid (cfg/tempid)
-        new-cfg (script/transact [{:db/id server-tid
-                                   :arachne/id arachne-id
-                                   :arachne.component/constructor :clojure.core/hash-map
-                                   :arachne.http.server/port port}])]
-    (cfg/resolve-tempid new-cfg server-tid)))
+  (let [server-tid (cfg/tempid)]
+    (script/transact [{:db/id server-tid
+                       :arachne/id arachne-id
+                       :arachne.component/constructor :clojure.core/hash-map
+                       :arachne.http.server/port port}]
+      server-tid)))
 
 (defmacro dummy-server
   "Define a dummy HTTP server in the current configuration. Evaluates the body with
@@ -47,8 +44,7 @@
   (a/runtime :test/rt [:test/server])
   (dummy-server :test/server 8080))
 
-
-(deftest plain-server
+(defn plain-server []
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
               '(arachne.http.dsl-test/plain-server-cfg))]
     (is (= {:arachne/id :test/server
@@ -61,24 +57,24 @@
 
   (a/runtime :test/rt [:test/server])
 
-  (a/component :test/handler-1 {} 'test/ctor)
-  (a/component :test/handler-3 {} 'test/ctor)
+  (a/component :test/handler-1 'test/ctor)
+  (a/component :test/handler-3 'test/ctor)
 
   (dummy-server :test/server 8080
 
-    (h/endpoint :get "/" :test/handler-1 :the-root)
+    (h/endpoint :get "/" :test/handler-1 :name :the-root)
 
     (h/context "/a/b/"
 
-      (h/endpoint :get :head "/c/*"
-        (a/component :test/handler-2 {} 'test/ctor)
-        :handler-2-name)
+      (h/endpoint #{:get :head} "/c/*" (a/component :test/handler-2 'test/ctor) :name :handler-2-name)
 
       (h/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3))))
 
 (deftest basic-endpoints
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
               '(arachne.http.dsl-test/basic-endpoints-cfg))]
+
+    (def the-cfg cfg)
 
     (is (= 1 (cfg/q cfg '[:find (count ?r) .
                           :where [?r :arachne.http.route-segment/pattern "a"]])))
@@ -125,17 +121,18 @@
                      [?d :arachne.http.route-segment/constraint "[0-9]+"]
                      [?d :arachne.http.route-segment/parent ?b]]))))
 
+
 (defn handler-endpoint-cfg
   []
-
   (a/runtime :test/rt [:test/server])
 
-  (h/handler :test/handler {} 'test/handler)
-
   (dummy-server :test/server 8080
-    (h/endpoint :get "/foo" :test/handler :the-handler))
 
-  )
+    (h/handler :test/handler2 'test/handler-fn-2)
+
+    (h/endpoint :get "/foo" (h/handler 'test/handler-fn-1))
+    (h/endpoint :get "/bar" :test/handler2)
+    (h/endpoint :get "/baz" (h/handler 'test/handler-fn-1) :name :override-name)))
 
 (deftest handler-endpoint
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
@@ -143,11 +140,33 @@
 
     (is (cfg/q cfg '[:find ?handler .
                      :where
-
-                     [?handler :arachne.http.endpoint/name :the-handler]
-                     [?handler :arachne.http.endpoint/methods :get]
-                     [?handler :arachne.http.handler/fn :test/handler]
+                     [?handler :arachne.http.endpoint/name :test/handler-fn-1]
                      [?handler :arachne.http.endpoint/route ?r]
-                     [?r :arachne.http.route-segment/pattern "foo"]
-                     [?r :arachne.http.route-segment/parent ?s]
-                     [?s :arachne.http.server/port 8080]]))))
+                     [?r :arachne.http.route-segment/pattern "foo"]]))
+
+    (is (cfg/q cfg '[:find ?handler .
+                     :where
+                     [?handler :arachne.http.endpoint/name :test/handler-fn-2]
+                     [?handler :arachne.http.endpoint/route ?r]
+                     [?r :arachne.http.route-segment/pattern "bar"]]))
+
+    (is (cfg/q cfg '[:find ?handler .
+                     :where
+                     [?handler :arachne.http.endpoint/name :override-name]
+                     [?handler :arachne.http.endpoint/route ?r]
+                     [?r :arachne.http.route-segment/pattern "baz"]]))))
+
+(defn duplicate-name-validation-cfg []
+
+  (a/runtime :test/rt [:test/server])
+
+  (dummy-server :test/server 8080
+
+    (h/endpoint :get "/foo" (h/handler 'test/handler))
+    (h/endpoint :get "/bar" (h/handler 'test/handler))))
+
+(deftest duplicate-name-validation
+  (is (thrown-with-msg? ArachneException #"1 errors while validating"
+        (core/build-config [:org.arachne-framework/arachne-http]
+          '(arachne.http.dsl-test/duplicate-name-validation-cfg)))))
+

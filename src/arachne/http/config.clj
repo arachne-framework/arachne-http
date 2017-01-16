@@ -33,3 +33,29 @@
                :where
                (endpoints ?server ?endpoint)]
     server-eid route-rules))
+
+(defn- infer-name
+  "Infer a name for the given endpoint eid"
+  [cfg endpoint-eid]
+  (let [entity (cfg/pull cfg '[:arachne/id :arachne.http.handler/fn] endpoint-eid)]
+    (or (:arachne.http.handler/fn entity)
+        (:arachne/id entity))))
+
+(defn infer-endpoint-names
+  "Find all the endpoints without names, and try to infer names for them based on Arachne ID or handler function"
+  [cfg]
+  (let [endpoints (cfg/q cfg '[:find [?endpoint ...]
+                               :in $
+                               :where
+                               [?endpoint :arachne.http.endpoint/route _]
+                               [(missing? $ ?endpoint :arachne.http.endpoint/name)]])
+        names (map #(infer-name cfg %) endpoints)
+        txdata (filter identity
+                 (map (fn [endpoint name]
+                         (when name
+                           {:db/id endpoint
+                            :arachne.http.endpoint/name name})) endpoints names))]
+    (if (seq txdata)
+      (cfg/with-provenance :module `infer-endpoint-names
+        (cfg/update cfg txdata))
+      cfg)))

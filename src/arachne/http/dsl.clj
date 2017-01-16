@@ -1,11 +1,13 @@
 (ns arachne.http.dsl
   (:require [arachne.core.config :as cfg]
             [arachne.core.util :as util]
-            [arachne.core.config.init :as script :refer [defdsl]]
-            [arachne.http.dsl.specs]
+            [arachne.core.config.script :as script :refer [defdsl]]
             [arachne.error :as e :refer [error deferror]]
             [clojure.spec :as s]
+            [arachne.core.dsl :as core]
             [clojure.string :as str]))
+
+(s/def ::http-method #{:options :get :head :post :put :delete :trace :connect})
 
 (def ^:dynamic *context-server*
   "The eid of the HTTP server currently in context"
@@ -21,6 +23,10 @@
   (if *context-path*
     (str *context-path* "/" path)
     path))
+
+(s/fdef context
+  :args (s/cat :path string?
+               :body (s/* any?)))
 
 (defmacro context
   "Creates a context which scopes endpoint definitions (and possibly other types
@@ -105,10 +111,9 @@
   (if-let [existing (find-segment (script/context-config) parent-eid segment-map)]
     (:db/id existing)
     (let [tid (cfg/tempid)]
-      (cfg/resolve-tempid
-        (script/transact [(assoc segment-map
-                            :db/id tid
-                            :arachne.http.route-segment/parent parent-eid)])
+      (script/transact [(assoc segment-map
+                          :db/id tid
+                          :arachne.http.route-segment/parent parent-eid)]
         tid))))
 
 (deferror ::not-in-server-context
@@ -130,69 +135,116 @@
       (error ::not-in-server-context {:path path}))
     (path-segments path)))
 
+(s/def ::name keyword?)
+
 (defdsl endpoint
-  "Define a HTTP endpoint with the given method(s), path and either an Arachne
-  ID or the entity ID of a component that implements the endpoint. Returns the
-  resolved EID of the given component."
-  [& args]
-  (let [conformed (s/conform (:args (s/get-spec `endpoint)) args)
-        methods (set (:methods conformed))
-        arachne-id (-> conformed :identity val :arachne-id)
-        name (or (-> conformed :identity val :name)
-               arachne-id)
-        path (with-context (:path conformed))
+  "Define the given component to be a HTTP endpoint and attaches it to the routing tree. The
+   component instance should be of a type that can be used as an endpoint with whatever server
+   you're using (such as a Pedestal interceptor, an Arachne Handler component or a Ring handler
+   function).
+
+   Arguments are:
+
+   - Method(s) (mandatory): either a keyword or set of keywords indicating the HTTP methods
+     that this endpoint supports.
+   - Path (mandatory): The URL path to which the endpoint is attached.
+   - Component (mandatory): A reference to the actual endpoint component. A component reference can
+     be an Arachne ID of a component declared elsewhere in the config, or an eid (such as is
+     returned by DSL forms, allowing endpoints to be defined inline.)
+   - Options (optional): A map (or kwargs) of additional options.
+
+  Supported options are:
+
+   - :name - the name of the endpoint. If none is provided, one will later be inferred from the
+     Arachne ID or handler function of the component.
+
+   Returns the entity ID of the endpoint component"
+  (s/cat :methods (s/or :one ::http-method
+                        :many (s/coll-of ::http-method :min-count 1))
+         :path string?
+         :component ::core/ref
+         :opts (util/keys** :opt-un [::name]))
+  [methods path component & opts]
+  (let [methods (let [[type methods] (:methods &args)]
+                  (case type
+                    :one #{methods}
+                    :many (set methods)))
+        path (with-context (:path &args))
         segment (ensure-path path)
-        eid (-> conformed :identity val :eid)
-        tid (cfg/tempid)
-        new-cfg (script/transact
-                  [(util/mkeep {:db/id (or eid tid)
-                                :arachne/id arachne-id
-                                :arachne.http.endpoint/route segment
-                                :arachne.http.endpoint/name name
-                                :arachne.http.endpoint/methods methods})])]
-    (or eid (cfg/resolve-tempid new-cfg tid))))
+        eid (core/resolved-ref (:component &args))
+        name (-> &args :opts second :name)
+        entity (util/mkeep {:db/id eid
+                            :arachne.http.endpoint/route segment
+                            :arachne.http.endpoint/methods methods
+                            :arachne.http.endpoint/name name})]
+    (script/transact [entity])
+    eid))
+
+(s/fdef arachne.http.dsl/handler
+  :args (s/cat
+          :arachne-id ::core/id
+          :dependencies ::core/dependency-map
+          :handler (s/and symbol? namespace)))
 
 (defdsl handler
   "Defines a HTTP request handler component that uses a simple Ring-style
-  request handler function. Allows users to specify a map set of dependencies,
-  which are associated on to the request before it is passed to the handler
-  function."
-  [arachne-id dependencies handler-fn]
-  (let [tid (cfg/tempid)
-        deps (map (fn [[id key]]
-                    {:arachne.component.dependency/entity {(if (keyword? id)
-                                                             :arachne/id
-                                                             :db/id) id}
-                     :arachne.component.dependency/key key})
-               dependencies)
-        txmap (util/mkeep
-                {:db/id tid
-                 :arachne/id arachne-id
-                 :arachne.component/constructor :arachne.http/handler-component
-                 :arachne.component/dependencies deps
-                 :arachne.http.handler/fn (keyword handler-fn)})]
-    (cfg/resolve-tempid (script/transact [txmap]) tid)))
+  request handler function.
 
+  Arguments are:
+
+  - Arachne ID (optional): An Arachne ID for the handler component
+  - Handler function (mandatory): A symbol naming the handler function
+  - Dependency map (optional): A component dependency map of {<key> <component-reference>}.
+    A component reference may be an Arachne ID or entity ID.
+
+  Dependencies will be assoc'd with the specified key to the Ring request map before it is
+  passed to the supplied handler function."
+  (s/cat :arachne-id (s/? ::core/arachne-id)
+         :handler (s/and symbol? namespace)
+         :dependencies (s/? ::core/dependency-map))
+  [<arachne-id> handler <dependencies>]
+  (let [tid (cfg/tempid)
+        entity (util/mkeep
+                 {:db/id tid
+                  :arachne/id (:arachne-id &args)
+                  :arachne.http.handler/fn (keyword (:handler &args))
+                  :arachne.component/constructor :arachne.http/handler-component})
+        txdata (map (fn [[k v]]
+                      {:db/id tid
+                       :arachne.component/dependencies
+                       [{:arachne.component.dependency/key k
+                         :arachne.component.dependency/entity (ref v)}]})
+                 (:dependencies &args))
+        txdata (conj txdata entity)]
+    (script/transact txdata tid)))
 
 (comment
 
-  ;; Declarative approach:
-
-  (migration :a/a :a/b
-    (type :my/Person
-      (attr :my.person/id :string)))
-
-  (migration :a/b :a/c
-    (type :my/Person
-      (attr :my.person/id :uuid)))
 
 
-  (migration :a/b :a/c
-    (type :my/Person
-      (attr :my.person/id :string)))
+  ;; name: :custom/endpoint
+  (a/component :custom/endpoint 'my/endpoint)
+  (h/endpoint :get "/foo" :custom/endpoint)
 
+  ;; or...
 
+  ;; name: :my/endpoint
+  (h/endpoint :get "/foo" (a/component 'my/endpoint))
 
+  ;; or...
 
+  ;; name: :custom/handlern
+  (h/handler :custom/handler 'my/handler)
+  (h/endpoint :get "/foo" :custom/handler)
+
+  ;; or
+
+  ;; name: :my/handler
+  (h/endpoint :get "/foo" (h/handler 'my/handler))
+
+  ;; or
+
+  ;; name: :donald
+  (h/endpoint :get "/foo" (h/handler 'my/handler) :name :donald)
 
   )

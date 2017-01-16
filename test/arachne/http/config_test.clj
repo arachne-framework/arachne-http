@@ -4,7 +4,7 @@
             [arachne.core.config.validation :as v]
             [arachne.core :as core]
             [arachne.core.config :as cfg]
-            [arachne.core.config.init :as init]
+            [arachne.core.config.script :as init]
 
             [arachne.http.dsl-test :as dsltest]
             [arachne.core.dsl :as a]
@@ -14,9 +14,9 @@
 
   (a/runtime :test/rt [:test/server])
 
-  (a/component :test/handler-1 {} 'test/ctor)
-  (a/component :test/handler-2 {} 'test/ctor)
-  (a/component :test/handler-3 {} 'test/ctor)
+  (a/component :test/handler-1 'test/ctor)
+  (a/component :test/handler-2 'test/ctor)
+  (a/component :test/handler-3 'test/ctor)
 
   (dsltest/dummy-server :test/server 8080
 
