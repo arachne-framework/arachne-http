@@ -1,6 +1,7 @@
 (ns arachne.http.config
   "Utilities for working with HTTP entities in a configuration"
-  (:require [arachne.core.config :as cfg]))
+  (:require [arachne.core.config :as cfg]
+            [clojure.set :as set]))
 
 (def route-rules
   "Datalog rule to recursively associate parent and child route segments in a
@@ -57,5 +58,24 @@
                             :arachne.http.endpoint/name name})) endpoints names))]
     (if (seq txdata)
       (cfg/with-provenance :module `infer-endpoint-names
+        (cfg/update cfg txdata))
+      cfg)))
+
+(defn add-endpoint-dependencies
+  "Ensure that the Server entity has a dependency on all Endpoints under it (if a transitive
+   dependency doesn't already exist)"
+  [cfg]
+  (let [txdata (mapcat (fn [server]
+                         (let [existing-deps (set (cfg/dependencies cfg server))
+                               endpoints (set (find-endpoints cfg server))
+                               endpoints (set/difference endpoints existing-deps)]
+                           (map (fn [endpoint]
+                                  {:db/id server
+                                   :arachne.component/dependencies
+                                   [{:arachne.component.dependency/entity endpoint}]})
+                             endpoints)))
+                 (servers cfg))]
+    (if (seq txdata)
+      (cfg/with-provenance :module `add-endpoint-dependencies
         (cfg/update cfg txdata))
       cfg)))

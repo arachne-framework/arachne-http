@@ -38,4 +38,5 @@
   [cfg]
   (-> cfg
     (v/add-validators)
-    (http-cfg/infer-endpoint-names)))
+    (http-cfg/infer-endpoint-names)
+    (http-cfg/add-endpoint-dependencies)))

@@ -29,8 +29,8 @@
 
   (a/runtime :test/rt [:test/server])
 
-  (a/component :test/handler-1 'test/ctor)
-  (a/component :test/handler-3 'test/ctor)
+  (a/component :test/handler-1 'clojure.core/hash-map)
+  (a/component :test/handler-3 'clojure.core/hash-map)
 
   (dummy-server :test/server 8080
 
@@ -38,7 +38,7 @@
 
     (h/context "/a/b/"
 
-      (h/endpoint #{:get :head} "/c/*" (a/component :test/handler-2 'test/ctor) :name :handler-2-name)
+      (h/endpoint #{:get :head} "/c/*" (a/component :test/handler-2 'clojure.core/hash-map) :name :handler-2-name)
 
       (h/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3))))
 
