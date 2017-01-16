@@ -213,38 +213,7 @@
                       {:db/id tid
                        :arachne.component/dependencies
                        [{:arachne.component.dependency/key k
-                         :arachne.component.dependency/entity (ref v)}]})
+                         :arachne.component.dependency/entity (core/ref v)}]})
                  (:dependencies &args))
         txdata (conj txdata entity)]
     (script/transact txdata tid)))
-
-(comment
-
-
-
-  ;; name: :custom/endpoint
-  (a/component :custom/endpoint 'my/endpoint)
-  (h/endpoint :get "/foo" :custom/endpoint)
-
-  ;; or...
-
-  ;; name: :my/endpoint
-  (h/endpoint :get "/foo" (a/component 'my/endpoint))
-
-  ;; or...
-
-  ;; name: :custom/handlern
-  (h/handler :custom/handler 'my/handler)
-  (h/endpoint :get "/foo" :custom/handler)
-
-  ;; or
-
-  ;; name: :my/handler
-  (h/endpoint :get "/foo" (h/handler 'my/handler))
-
-  ;; or
-
-  ;; name: :donald
-  (h/endpoint :get "/foo" (h/handler 'my/handler) :name :donald)
-
-  )

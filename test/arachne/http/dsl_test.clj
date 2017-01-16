@@ -128,7 +128,9 @@
 
   (dummy-server :test/server 8080
 
-    (h/handler :test/handler2 'test/handler-fn-2)
+    (a/component :test/dep 'clojure.core/hash-map)
+
+    (h/handler :test/handler2 'test/handler-fn-2 {:dep :test/dep})
 
     (h/endpoint :get "/foo" (h/handler 'test/handler-fn-1))
     (h/endpoint :get "/bar" :test/handler2)
@@ -148,7 +150,11 @@
                      :where
                      [?handler :arachne.http.endpoint/name :test/handler-fn-2]
                      [?handler :arachne.http.endpoint/route ?r]
-                     [?r :arachne.http.route-segment/pattern "bar"]]))
+                     [?r :arachne.http.route-segment/pattern "bar"]
+                     [?handler :arachne.component/dependencies ?d]
+                     [?d :arachne.component.dependency/key :dep]
+                     [?d :arachne.component.dependency/entity ?dep]
+                     [?dep :arachne/id :test/dep]]))
 
     (is (cfg/q cfg '[:find ?handler .
                      :where
