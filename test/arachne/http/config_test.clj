@@ -6,9 +6,9 @@
             [arachne.core.config :as cfg]
             [arachne.core.config.script :as init]
 
-            [arachne.http.dsl-test :as dsltest]
             [arachne.core.dsl :as a]
-            [arachne.http.dsl :as h]))
+            [arachne.http.dsl :as h]
+            [arachne.http.dsl.test :as dsltest]))
 
 (defn test-cfg []
 
