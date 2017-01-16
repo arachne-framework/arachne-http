@@ -8,15 +8,18 @@
 
             [arachne.core.dsl :as a]
             [arachne.http.dsl :as h]
-            [arachne.http.dsl.test :as dsltest]))
+            [arachne.http.dsl.test :as dsltest]
+
+            [arachne.core.runtime :as rt]
+            [com.stuartsierra.component :as c]))
 
 (defn test-cfg []
 
   (a/runtime :test/rt [:test/server])
 
-  (a/component :test/handler-1 'test/ctor)
-  (a/component :test/handler-2 'test/ctor)
-  (a/component :test/handler-3 'test/ctor)
+  (a/component :test/handler-1 'clojure.core/hash-map)
+  (a/component :test/handler-2 'clojure.core/hash-map)
+  (a/component :test/handler-3 'clojure.core/hash-map)
 
   (dsltest/dummy-server :test/server 8080
 
@@ -60,3 +63,10 @@
                    [{:arachne.http.route-segment/pattern "foo"}]))]
       (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
             (v/validate cfg' true))))))
+
+(deftest route-path-test
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))
+        rt (rt/init cfg [:arachne/id :test/rt])
+        rt (c/start rt)]
+    (is (= "/a/b/x/y"
+          (http-cfg/route-path cfg [:arachne/id :test/handler-3])))))

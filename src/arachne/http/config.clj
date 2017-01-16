@@ -1,7 +1,8 @@
 (ns arachne.http.config
   "Utilities for working with HTTP entities in a configuration"
   (:require [arachne.core.config :as cfg]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [clojure.string :as str]))
 
 (def route-rules
   "Datalog rule to recursively associate parent and child route segments in a
@@ -79,3 +80,35 @@
       (cfg/with-provenance :module `add-endpoint-dependencies
         (cfg/update cfg txdata))
       cfg)))
+
+(defn endpoints
+  "Return the EIDs of all endpoints that are children of a root route segment"
+  [cfg root-eid]
+  (cfg/q cfg '[:find [?e ...]
+               :in $ % ?root
+               :where
+               (endpoints ?root ?e)]
+   route-rules root-eid))
+
+(defn route-segments
+  "Return an ordered list of segments between the root server and a given endpoint"
+  [cfg eid]
+  (reverse
+    (take-while identity
+      (iterate (fn [eid]
+                 (cfg/attr cfg eid :arachne.http.route-segment/parent :db/id))
+        (cfg/attr cfg eid :arachne.http.endpoint/route :db/id)))))
+
+(defn route-path
+  "Build a route path , given an endpoint eid."
+  [cfg endpoint]
+  (let [segments (route-segments cfg endpoint)
+        path (str/join "/"
+               (for [seg segments]
+                 (let [s (cfg/pull cfg '[*] seg)]
+                   (or (:arachne.http.route-segment/pattern s)
+                       (:arachne.http.route-segment/param s)
+                       (when (:arachne.http.route-segment/wildcard s) "*")))))]
+    (if (str/blank? path)
+      "/"
+      path)))
