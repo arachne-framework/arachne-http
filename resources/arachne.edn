@@ -1,0 +1,4 @@
+[{:arachne/name :org.arachne-framework/arachne-http
+  :arachne/schema arachne.http/schema
+  :arachne/configure arachne.http/configure
+  :arachne/dependencies [:org.arachne-framework/arachne-core]}]
