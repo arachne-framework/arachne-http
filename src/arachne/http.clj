@@ -28,12 +28,12 @@
         handler (util/require-and-resolve handler-kw)]
     (->HandlerComponent handler dep-keys)))
 
-(defn schema
+(defn ^:no-doc schema
   "Return the schema for the arachne.http module"
   []
   schema/schema)
 
-(defn configure
+(defn ^:no-doc configure
   "Configure the arachne.http module"
   [cfg]
   (-> cfg
