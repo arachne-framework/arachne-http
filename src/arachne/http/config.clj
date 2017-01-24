@@ -90,25 +90,26 @@
                (endpoints ?root ?e)]
    route-rules root-eid))
 
+
 (defn route-segments
-  "Return an ordered list of segments between the root server and a given endpoint"
-  [cfg eid]
+  "Return an ordered list of segment eids between the root server and the given route segment"
+  [cfg segment-eid]
   (reverse
     (take-while identity
       (iterate (fn [eid]
                  (cfg/attr cfg eid :arachne.http.route-segment/parent :db/id))
-        (cfg/attr cfg eid :arachne.http.endpoint/route :db/id)))))
+        segment-eid))))
 
 (defn route-path
-  "Build a route path , given an endpoint eid."
-  [cfg endpoint]
-  (let [segments (route-segments cfg endpoint)
+  "Build a route path for the given route segment eid"
+  [cfg segment-eid]
+  (let [segments (route-segments cfg segment-eid)
         path (str/join "/"
                (for [seg segments]
                  (let [s (cfg/pull cfg '[*] seg)]
                    (or (:arachne.http.route-segment/pattern s)
-                       (:arachne.http.route-segment/param s)
-                       (when (:arachne.http.route-segment/wildcard s) "*")))))]
+                     (:arachne.http.route-segment/param s)
+                     (when (:arachne.http.route-segment/wildcard s) "*")))))]
     (if (str/blank? path)
       "/"
       path)))

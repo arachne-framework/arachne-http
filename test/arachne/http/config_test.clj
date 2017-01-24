@@ -67,6 +67,7 @@
 (deftest route-path-test
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))
         rt (rt/init cfg [:arachne/id :test/rt])
-        rt (c/start rt)]
+        rt (c/start rt)
+        route-eid (cfg/attr cfg [:arachne/id :test/handler-3] :arachne.http.endpoint/route :db/id)]
     (is (= "/a/b/x/y"
-          (http-cfg/route-path cfg [:arachne/id :test/handler-3])))))
+          (http-cfg/route-path cfg route-eid)))))
