@@ -22,8 +22,8 @@
         :one-or-none :keyword
         "A URL path parameter")
       (o/attr :arachne.http.route-segment/wildcard
-        :one-or-none :boolean
-        "True if this is a wildcard path segment.")
+        :one-or-none :keyword
+        "A catch-all URL segment, eg /*foo. Wildcard segments may not have child route segments.")
       (o/attr :arachne.http.route-segment/constraint
         :one-or-none :string
         "A regular expression constraining the value of a param or wildcard segment."))

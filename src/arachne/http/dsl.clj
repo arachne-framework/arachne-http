@@ -51,11 +51,11 @@
 (def ^:private segment-re
   "Regex to parse a path segment. Yields the following capturing groups:
 
-  1. The wildcard charcter (if present)
+  1. The wildcard name (if present)
   2. The param name (if present)
   3. The literal segment (if present)
   4. The regex constraint (if present)"
-  #"(?:(\*)?|(?::([\w\-]+)?)|([\w\-]+))(?:\(\/(.+)\/\))?")
+  #"(?:(\*[\w\-]+)?|(?::([\w\-]+)?)|([\w\-]+))(?:\(\/(.+)\/\))?")
 
 (defn- parse-segment
   "Given a single path segment, return a partial entity map"
@@ -68,7 +68,7 @@
                    segment path)
           {:segment segment, :path path})))
     (cond-> {}
-      wild (assoc :arachne.http.route-segment/wildcard true)
+      wild (assoc :arachne.http.route-segment/wildcard (keyword (subs wild 1)))
       param (assoc :arachne.http.route-segment/param (keyword param))
       literal (assoc :arachne.http.route-segment/pattern literal)
       constraint (assoc :arachne.http.route-segment/constraint constraint))))

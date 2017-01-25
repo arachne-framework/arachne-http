@@ -38,7 +38,7 @@
 
     (h/context "/a/b/"
 
-      (h/endpoint #{:get :head} "/c/*" (a/component :test/handler-2 'clojure.core/hash-map) :name :handler-2-name)
+      (h/endpoint #{:get :head} "/c/*w" (a/component :test/handler-2 'clojure.core/hash-map) :name :handler-2-name)
 
       (h/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3))))
 
@@ -74,7 +74,7 @@
                      [?end2 :arachne.http.endpoint/methods :head]
                      [?end2 :arachne/id :test/handler-2]
                      [?end2 :arachne.http.endpoint/route ?w]
-                     [?w :arachne.http.route-segment/wildcard true]
+                     [?w :arachne.http.route-segment/wildcard :w]
                      [?w :arachne.http.route-segment/parent ?c]
                      [?c :arachne.http.route-segment/pattern "c"]
                      [?c :arachne.http.route-segment/parent ?b]

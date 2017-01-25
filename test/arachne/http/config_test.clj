@@ -64,10 +64,28 @@
       (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
             (v/validate cfg' true))))))
 
+(defn route-path-cfg []
+
+  (a/runtime :test/rt [:test/server])
+
+  (dsltest/dummy-server :test/server 8080
+
+    (h/endpoint :get "/" (a/component :test/handler-1 'clojure.core/hash-map))
+    (h/endpoint :get "a/b/c" (a/component :test/handler-2 'clojure.core/hash-map))
+    (h/endpoint :get "foo/:param/bar" (a/component :test/handler-3 'clojure.core/hash-map))
+    (h/endpoint :get "baz/*wild" (a/component :test/handler-4 'clojure.core/hash-map))))
+
+
 (deftest route-path-test
-  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(route-path-cfg))
         rt (rt/init cfg [:arachne/id :test/rt])
-        rt (c/start rt)
-        route-eid (cfg/attr cfg [:arachne/id :test/handler-3] :arachne.http.endpoint/route :db/id)]
-    (is (= "/a/b/x/y"
-          (http-cfg/route-path cfg route-eid)))))
+        rt (c/start rt)]
+    (is (= "/" (http-cfg/route-path cfg
+                 (cfg/attr cfg [:arachne/id :test/handler-1] :arachne.http.endpoint/route :db/id))))
+    (is (= "/a/b/c" (http-cfg/route-path cfg
+                      (cfg/attr cfg [:arachne/id :test/handler-2] :arachne.http.endpoint/route :db/id))))
+    (is (= "/foo/:param/bar" (http-cfg/route-path cfg
+                               (cfg/attr cfg [:arachne/id :test/handler-3] :arachne.http.endpoint/route :db/id))))
+    (is (= "/baz/*wild" (http-cfg/route-path cfg
+                          (cfg/attr cfg [:arachne/id :test/handler-4] :arachne.http.endpoint/route :db/id))))
+    ))

@@ -106,10 +106,14 @@
   (let [segments (route-segments cfg segment-eid)
         path (str/join "/"
                (for [seg segments]
-                 (let [s (cfg/pull cfg '[*] seg)]
-                   (or (:arachne.http.route-segment/pattern s)
-                     (:arachne.http.route-segment/param s)
-                     (when (:arachne.http.route-segment/wildcard s) "*")))))]
+                 (let [s (cfg/pull cfg '[*] seg)
+                       pattern (:arachne.http.route-segment/pattern s)
+                       param (:arachne.http.route-segment/param s)
+                       wild (:arachne.http.route-segment/wildcard s)]
+                   (cond
+                     pattern pattern
+                     param param
+                     wild (str "*" (name wild))))))]
     (if (str/blank? path)
       "/"
       path)))
