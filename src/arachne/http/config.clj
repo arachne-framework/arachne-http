@@ -5,8 +5,14 @@
             [clojure.string :as str]))
 
 (def route-rules
-  "Datalog rule to recursively associate parent and child route segments in a
-  routing tree."
+  "Datalog rule to recursively associate parent and child route segments in a routing tree.
+
+  Provided rules are:
+
+  - (routes ?ancestor ?descendant) - Link a route with all its parent, ancestor and child routes.
+  - (endpoints ?route ?endpoint) - Link a route with all endpoints that are transitively or directly attached to it.
+
+  "
   '[[(routes ?parent ?child)
      [?child :arachne.http.route-segment/parent ?parent]]
     [(routes ?ancestor ?descendant)
@@ -43,8 +49,10 @@
     (or (:arachne.http.handler/fn entity)
         (:arachne/id entity))))
 
-(defn infer-endpoint-names
-  "Find all the endpoints without names, and try to infer names for them based on Arachne ID or handler function"
+(defn ^:no-doc infer-endpoint-names
+  "Find all the endpoints without names, and try to infer names for them based on Arachne ID or handler function.
+
+  Used internally during the module configure phase."
   [cfg]
   (let [endpoints (cfg/q cfg '[:find [?endpoint ...]
                                :in $
@@ -62,9 +70,11 @@
         (cfg/update cfg txdata))
       cfg)))
 
-(defn add-endpoint-dependencies
+(defn ^:no-doc add-endpoint-dependencies
   "Ensure that the Server entity has a dependency on all Endpoints under it (if a transitive
-   dependency doesn't already exist)"
+   dependency doesn't already exist)
+
+   Used internally during the module configure phase."
   [cfg]
   (let [txdata (mapcat (fn [server]
                          (let [existing-deps (set (cfg/dependencies cfg server))
@@ -82,13 +92,13 @@
       cfg)))
 
 (defn endpoints
-  "Return the EIDs of all endpoints that are children of a root route segment"
-  [cfg root-eid]
+  "Return the EIDs of all endpoints that are children of the given route segment."
+  [cfg segment-eid]
   (cfg/q cfg '[:find [?e ...]
                :in $ % ?root
                :where
                (endpoints ?root ?e)]
-   route-rules root-eid))
+   route-rules segment-eid))
 
 
 (defn route-segments
@@ -101,7 +111,7 @@
         segment-eid))))
 
 (defn route-path
-  "Build a route path for the given route segment eid"
+  "Build a route path string for the given route segment eid."
   [cfg segment-eid]
   (let [segments (route-segments cfg segment-eid)
         path (str/join "/"

@@ -6,10 +6,10 @@
             [arachne.http.validators :as v]))
 
 (defprotocol Handler
-  "A logical Ring-style request handler which is also an Arachne component that
-  can have dependencies, etc."
-  (handle [this request] "Given a Ring-style request map, return a Ring-style
-  response"))
+  "A Component representing a Ring-style request handler in which the response map is a function of the request map.
+
+   Dependencies of a Handler component will be injected into the request map, using their dependency key."
+  (handle [this request] "Given a Ring-style request map, return a Ring-style response map"))
 
 (defrecord HandlerComponent [handler dep-keys]
   Handler
@@ -17,7 +17,7 @@
     (handler (merge request (select-keys this dep-keys)))))
 
 (defn handler-component
-  "Constructor for a handler component"
+  "Constructor for a `Handler` component. The component must have a `:arachne.http.handler/fn` attribute indicating the handler function to which the request will be delegated."
   [cfg eid]
   (let [handler-kw (cfg/attr cfg eid :arachne.http.handler/fn)
         dep-keys (cfg/q cfg '[:find [?key ...]

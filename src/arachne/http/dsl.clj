@@ -1,4 +1,5 @@
 (ns arachne.http.dsl
+  "User-facing DSL functions for init scripts"
   (:require [arachne.core.config :as cfg]
             [arachne.core.util :as util]
             [arachne.core.config.script :as script :refer [defdsl]]
@@ -10,14 +11,14 @@
 (s/def ::http-method #{:options :get :head :post :put :delete :trace :connect})
 
 (def ^:dynamic *context-server*
-  "The eid of the HTTP server currently in context"
+  "The entity ID of the HTTP server currently in context."
   nil)
 
 (def ^:dynamic *context-path*
-  "The path bound in the current context."
+  "The path prefix currently in context. If bound, will be automatically appended to the paths of endpoints declared in the context."
   nil)
 
-(defn with-context
+(defn ^:no-doc with-context
   "Given a path, return a path including any existing context path"
   [path]
   (if *context-path*
@@ -29,8 +30,7 @@
                :body (s/* any?)))
 
 (defmacro context
-  "Creates a context which scopes endpoint definitions (and possibly other types
-  of definitions) to the specified path. For example,
+  "Creates a context which scopes endpoint definitions (and possibly other types of definitions) to the specified path. For example,
 
     (context \"foo/bar\"
       (endpoint :get \"baz\" :some/handler))
@@ -39,8 +39,7 @@
 
     (endpoint :get \"foo/bar/baz\" :some/handler).
 
-  Concretely, this macro evaluates the body with *context-path* bound to the
-  given path."
+  Concretely, this macro evaluates the body with *context-path* bound to the given path."
   [path & body]
   `(binding [*context-path* (with-context ~path)]
      ~@body))
@@ -123,7 +122,7 @@
                 "Make sure you only invoke route-building DSL functions from inside a `arachne.http.dsl/server` form."
                 "If you're building your own DSL extensions, make sure that `arachne.http.dsl/*context-server*` is bound"])
 
-(defn ensure-path
+(defn ^:no-doc ensure-path
   "Given a path (as a string), ensure that all of the corresponding routing
   segments exist in the context configuration, creating them if they are not
   already present. Returns the entity ID of the final segment in the given
