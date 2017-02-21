@@ -16,7 +16,7 @@
   (a/runtime :test/rt [:test/server])
   (dummy-server :test/server 8080))
 
-(defn plain-server []
+(deftest plain-server
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
               '(arachne.http.dsl-test/plain-server-cfg))]
     (is (= {:arachne/id :test/server
@@ -65,15 +65,18 @@
 
                      [?end1 :arachne.http.endpoint/name :the-root]
                      [?end1 :arachne.http.endpoint/methods :get]
-                     [?end1 :arachne/id :test/handler-1]
                      [?end1 :arachne.http.endpoint/route ?server]
+                     [?end1 :arachne.http.endpoint/handler ?h1]
+                     [?h1 :arachne/id :test/handler-1]
+
                      [?server :arachne.http.server/port 8080]
 
                      [?end2 :arachne.http.endpoint/name :handler-2-name]
                      [?end2 :arachne.http.endpoint/methods :get]
                      [?end2 :arachne.http.endpoint/methods :head]
-                     [?end2 :arachne/id :test/handler-2]
                      [?end2 :arachne.http.endpoint/route ?w]
+                     [?end2 :arachne.http.endpoint/handler ?h2]
+                     [?h2 :arachne/id :test/handler-2]
                      [?w :arachne.http.route-segment/wildcard :w]
                      [?w :arachne.http.route-segment/parent ?c]
                      [?c :arachne.http.route-segment/pattern "c"]
@@ -85,14 +88,14 @@
 
                      [?end3 :arachne.http.endpoint/name :test/handler-3]
                      [?end3 :arachne.http.endpoint/methods :get]
-                     [?end3 :arachne/id :test/handler-3]
                      [?end3 :arachne.http.endpoint/route ?e]
+                     [?end3 :arachne.http.endpoint/handler ?h3]
+                     [?h3 :arachne/id :test/handler-3]
                      [?e :arachne.http.route-segment/pattern "e"]
                      [?e :arachne.http.route-segment/parent ?d]
                      [?d :arachne.http.route-segment/param :d]
                      [?d :arachne.http.route-segment/constraint "[0-9]+"]
                      [?d :arachne.http.route-segment/parent ?b]]))))
-
 
 (defn handler-endpoint-cfg
   []
@@ -118,11 +121,12 @@
                      [?handler :arachne.http.endpoint/route ?r]
                      [?r :arachne.http.route-segment/pattern "foo"]]))
 
-    (is (cfg/q cfg '[:find ?handler .
+    (is (cfg/q cfg '[:find ?endpoint .
                      :where
-                     [?handler :arachne.http.endpoint/name :test/handler-fn-2]
-                     [?handler :arachne.http.endpoint/route ?r]
+                     [?endpoint :arachne.http.endpoint/name :test/handler2]
+                     [?endpoint :arachne.http.endpoint/route ?r]
                      [?r :arachne.http.route-segment/pattern "bar"]
+                     [?endpoint :arachne.http.endpoint/handler ?handler]
                      [?handler :arachne.component/dependencies ?d]
                      [?d :arachne.component.dependency/key :dep]
                      [?d :arachne.component.dependency/entity ?dep]
@@ -148,3 +152,21 @@
         (core/build-config [:org.arachne-framework/arachne-http]
           '(arachne.http.dsl-test/duplicate-name-validation-cfg)))))
 
+(defn any-method-cfg []
+
+  (a/runtime :test/rt [:test/server])
+
+  (dummy-server :test/server 8080
+
+    (h/endpoint :any "/foo" (h/handler 'test/handler))
+
+    ))
+
+(deftest any-method
+  (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
+              '(arachne.http.dsl-test/any-method-cfg))]
+
+    (is (cfg/q cfg '[:find ?e .
+                     :where
+                     [?e :arachne.http.endpoint/name :test/handler]
+                     [?e :arachne.http.endpoint/methods :any]]))))

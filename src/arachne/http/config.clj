@@ -33,21 +33,24 @@
                :where
                [?server :arachne.http.server/port _]]))
 
-(defn find-endpoints
-  "Given a server eid, find the eids of all endpoints in that server"
+(defn find-endpoint-handlers
+  "Given a server eid, find the eids of all endpoint handlers in that server"
   [cfg server-eid]
-  (cfg/q cfg '[:find [?endpoint ...]
+  (cfg/q cfg '[:find [?handler ...]
                :in $ ?server %
                :where
-               (endpoints ?server ?endpoint)]
+               (endpoints ?server ?endpoint)
+               [?endpoint :arachne.http.endpoint/handler ?handler]]
     server-eid route-rules))
 
 (defn- infer-name
   "Infer a name for the given endpoint eid"
   [cfg endpoint-eid]
-  (let [entity (cfg/pull cfg '[:arachne/id :arachne.http.handler/fn] endpoint-eid)]
-    (or (:arachne.http.handler/fn entity)
-        (:arachne/id entity))))
+  (let [entity (cfg/pull cfg '[{:arachne.http.endpoint/handler [:db/id :arachne/id :arachne.http.handler/fn]}]
+                 endpoint-eid)]
+    (or (-> entity :arachne.http.endpoint/handler :arachne/id)
+        (-> entity :arachne.http.endpoint/handler :arachne.http.handler/fn)
+        (keyword (str (gensym))))))
 
 (defn ^:no-doc infer-endpoint-names
   "Find all the endpoints without names, and try to infer names for them based on Arachne ID or handler function.
@@ -59,12 +62,9 @@
                                :where
                                [?endpoint :arachne.http.endpoint/route _]
                                [(missing? $ ?endpoint :arachne.http.endpoint/name)]])
-        names (map #(infer-name cfg %) endpoints)
-        txdata (filter identity
-                 (map (fn [endpoint name]
-                         (when name
-                           {:db/id endpoint
-                            :arachne.http.endpoint/name name})) endpoints names))]
+        txdata (map (fn [endpoint]
+                      {:db/id endpoint
+                       :arachne.http.endpoint/name (infer-name cfg endpoint)}) endpoints)]
     (if (seq txdata)
       (cfg/with-provenance :module `infer-endpoint-names
         (cfg/update cfg txdata))
@@ -78,13 +78,13 @@
   [cfg]
   (let [txdata (mapcat (fn [server]
                          (let [existing-deps (set (cfg/dependencies cfg server))
-                               endpoints (set (find-endpoints cfg server))
-                               endpoints (set/difference endpoints existing-deps)]
-                           (map (fn [endpoint]
+                               handlers (set (find-endpoint-handlers cfg server))
+                               deps (set/difference handlers existing-deps)]
+                           (map (fn [dep]
                                   {:db/id server
                                    :arachne.component/dependencies
-                                   [{:arachne.component.dependency/entity endpoint}]})
-                             endpoints)))
+                                   [{:arachne.component.dependency/entity dep}]})
+                             deps)))
                  (servers cfg))]
     (if (seq txdata)
       (cfg/with-provenance :module `add-endpoint-dependencies

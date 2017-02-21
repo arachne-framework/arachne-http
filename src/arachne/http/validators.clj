@@ -7,7 +7,7 @@
             [arachne.core.util :as util]
             [clojure.string :as str]))
 
-(def legal-methods #{:options :get :head :post :put :delete :trace :connect})
+(def legal-methods #{:any :options :get :head :post :put :delete :trace :connect})
 
 (deferror ::unknown-http-method
   :message "Unknown HTTP method `:method`"

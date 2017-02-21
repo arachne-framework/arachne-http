@@ -30,7 +30,7 @@
 (deftest find-endpoints
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))
         servers (@#'http-cfg/servers cfg)
-        deps (@#'http-cfg/find-endpoints cfg (first servers))]
+        deps (@#'http-cfg/find-endpoint-handlers cfg (first servers))]
     (is (= 1 (count servers)))
     (is (= 3 (count deps)))))
 
@@ -43,8 +43,8 @@
                      :arachne/id :test/server}
                     {:arachne.http.endpoint/methods :frobnicate
                      :arachne.http.endpoint/name :test/frob-handler
-                     :arachne.component/constructor :no.such/constructor
-                     :arachne.http.endpoint/route server}])))]
+                     :arachne.http.endpoint/route server
+                     :arachne.http.endpoint/handler {:arachne.component/constructor :no.such/constructor}}])))]
         (is (thrown-with-msg? arachne.ArachneException #"1 errors while validating"
               (v/validate cfg' true)))))
 
@@ -80,12 +80,25 @@
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(route-path-cfg))
         rt (rt/init cfg [:arachne/id :test/rt])
         rt (c/start rt)]
-    (is (= "/" (http-cfg/route-path cfg
-                 (cfg/attr cfg [:arachne/id :test/handler-1] :arachne.http.endpoint/route :db/id))))
-    (is (= "/a/b/c" (http-cfg/route-path cfg
-                      (cfg/attr cfg [:arachne/id :test/handler-2] :arachne.http.endpoint/route :db/id))))
-    (is (= "/foo/:param/bar" (http-cfg/route-path cfg
-                               (cfg/attr cfg [:arachne/id :test/handler-3] :arachne.http.endpoint/route :db/id))))
-    (is (= "/baz/*wild" (http-cfg/route-path cfg
-                          (cfg/attr cfg [:arachne/id :test/handler-4] :arachne.http.endpoint/route :db/id))))
-    ))
+    (let [[r1 r2 r3 r4] (cfg/q cfg '[:find [?r1 ?r2 ?r3 ?r4]
+                                     :where
+                                     [?e1 :arachne.http.endpoint/handler ?h1]
+                                     [?e1 :arachne.http.endpoint/route ?r1]
+                                     [?h1 :arachne/id :test/handler-1]
+
+                                     [?e2 :arachne.http.endpoint/handler ?h2]
+                                     [?e2 :arachne.http.endpoint/route ?r2]
+                                     [?h2 :arachne/id :test/handler-2]
+
+                                     [?e3 :arachne.http.endpoint/handler ?h3]
+                                     [?e3 :arachne.http.endpoint/route ?r3]
+                                     [?h3 :arachne/id :test/handler-3]
+
+                                     [?e4 :arachne.http.endpoint/handler ?h4]
+                                     [?e4 :arachne.http.endpoint/route ?r4]
+                                     [?h4 :arachne/id :test/handler-4]])]
+
+      (is (= "/" (http-cfg/route-path cfg r1)))
+      (is (= "/a/b/c" (http-cfg/route-path cfg r2)))
+      (is (= "/foo/:param/bar" (http-cfg/route-path cfg r3)))
+      (is (= "/baz/*wild" (http-cfg/route-path cfg r4))))))

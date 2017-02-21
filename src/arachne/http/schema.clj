@@ -28,8 +28,10 @@
         :one-or-none :string
         "A regular expression constraining the value of a param or wildcard segment."))
 
-    (o/type :arachne.http/Endpoint [:arachne/Component]
-      "A resolveable HTTP endpoint. The concrete type that this entails at runtime is implementation-specific, although all implementations should support instances of arachne.http.Handler as a least common denominator."
+    (o/type :arachne.http/Endpoint []
+      "A resolveable HTTP endpoint at a specific location in the routing tree."
+      (o/attr :arachne.http.endpoint/handler :one :ref
+        "Reference to a component that actually handles a request. The concrete type that this entails at runtime is implementation-specific, although all implementations should at least support instances of arachne.http.Handler.")
       (o/attr :arachne.http.endpoint/route
         :one :arachne.http/RouteSegment
         "Route at which this endpoint can serve")
@@ -38,9 +40,12 @@
         "Unique ID of an endpoint (used for URL generation)")
       (o/attr :arachne.http.endpoint/methods
         :one-or-more :keyword
-        "One or more HTTP methods that this endpoint will respond to. Values should be in #{:options :get :head :post :put :delete :trace :connect}"))
+        "One or more HTTP methods that this endpoint will respond to. Values should be in #{:options :get :head :post :put :delete :trace :connect}")
 
-    (o/type :arachne.http/Handler [:arachne.http/Endpoint]
+
+      )
+
+    (o/type :arachne.http/Handler [:arachne/Component]
       "A handler component that delegates request handling to a named Ring handler function"
       (o/attr :arachne.http.handler/fn :one :keyword
         "Ring handler function that will service requests to this handler"))))

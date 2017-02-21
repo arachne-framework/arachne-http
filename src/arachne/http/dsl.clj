@@ -8,7 +8,7 @@
             [arachne.core.dsl :as core]
             [clojure.string :as str]))
 
-(s/def ::http-method #{:options :get :head :post :put :delete :trace :connect})
+(s/def ::http-method #{:any :options :get :head :post :put :delete :trace :connect})
 
 (def ^:dynamic *context-server*
   "The entity ID of the HTTP server currently in context."
@@ -137,31 +137,37 @@
 (s/def ::name keyword?)
 
 (defdsl endpoint
-  "Define the given component to be a HTTP endpoint and attaches it to the routing tree. The
-   component instance should be of a type that can be used as an endpoint with whatever server
-   you're using (such as a Pedestal interceptor, an Arachne Handler component or a Ring handler
-   function).
+  "Attach the specified component to the routing tree at a specfic location.
 
    Arguments are:
 
    - Method(s) (mandatory): either a keyword or set of keywords indicating the HTTP methods
-     that this endpoint supports.
+     that this endpoint supports. The special value `:any` is also supported.
    - Path (mandatory): The URL path to which the endpoint is attached.
-   - Component (mandatory): A reference to the actual endpoint component. A component reference can
-     be an Arachne ID of a component declared elsewhere in the config, or an eid (such as is
-     returned by DSL forms, allowing endpoints to be defined inline.)
+   - Handler Component (mandatory): A reference to the component used to actually handle HTTP
+     requests. The component instance should be of a supported type for whatever server you're
+     using (such as a Pedestal interceptor, an Arachne Handler component, or a Ring handler
+     function).
    - Options (optional): A map (or kwargs) of additional options.
 
   Supported options are:
 
-   - :name - the name of the endpoint. If none is provided, one will later be inferred from the
-     Arachne ID or handler function of the component.
+   - :name - the name of the endpoint. If none is provided, one will be inferred.
 
-   Returns the entity ID of the endpoint component"
+  Name inference proceeds as follows:
+
+     1. If the component has an Arachne ID, that is used as the name.
+     2. If the component is an Arachne handler, the fully qualified name of the backing function
+        is used as the name.
+     3. If either of the methods #1 or #2 above would result in a name being applied to more than
+        one route (including a single `endpoint` DSL form that specifies more than one HTTP
+        method), a unique name will be assigned. Specify a :name explicitly to avoid this.
+
+  Returns the entity ID of the endpoint component."
   (s/cat :methods (s/or :one ::http-method
                         :many (s/coll-of ::http-method :min-count 1))
          :path string?
-         :component ::core/ref
+         :handler ::core/ref
          :opts (util/keys** :opt-un [::name]))
   [methods path component & opts]
   (let [methods (let [[type methods] (:methods &args)]
@@ -170,14 +176,15 @@
                     :many (set methods)))
         path (with-context (:path &args))
         segment (ensure-path path)
-        eid (core/resolved-ref (:component &args))
+        handler-eid (core/resolved-ref (:handler &args))
         name (-> &args :opts second :name)
-        entity (util/mkeep {:db/id eid
+        tid (cfg/tempid)
+        entity (util/mkeep {:db/id tid
+                            :arachne.http.endpoint/handler handler-eid
                             :arachne.http.endpoint/route segment
                             :arachne.http.endpoint/methods methods
                             :arachne.http.endpoint/name name})]
-    (script/transact [entity])
-    eid))
+    (script/transact [entity] tid)))
 
 (s/fdef arachne.http.dsl/handler
   :args (s/cat
