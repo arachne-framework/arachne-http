@@ -38,4 +38,12 @@
           (url-for :no-such-route)))
 
     (is (thrown-with-msg? ArachneException #"Missing required URL parameter"
-          (url-for :c {:foo "fred"})))))
+          (url-for :c {:foo "fred"})))
+
+    (is (= "/a/fr+ed/bob" (url-for :c {:foo "fr ed" :bar "bob"})))
+    (is (= "/a/fred/bob?baz=joe" (url-for :c {:foo "fred" :bar "bob" :baz "joe"})))
+
+    (let [url (url-for :b {:a 1 :b 2 :c "x+y"})]
+      (is (re-find #"a=1" url))
+      (is (re-find #"b=2" url))
+      (is (re-find #"c=x%2By" url)))))
