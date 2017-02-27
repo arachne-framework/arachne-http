@@ -176,11 +176,11 @@
                     :many (set methods)))
         path (with-context (:path &args))
         segment (ensure-path path)
-        handler-eid (core/resolved-ref (:handler &args))
+        handler (core/ref (:handler &args))
         name (-> &args :opts second :name)
         tid (cfg/tempid)
         entity (util/mkeep {:db/id tid
-                            :arachne.http.endpoint/handler handler-eid
+                            :arachne.http.endpoint/handler handler
                             :arachne.http.endpoint/route segment
                             :arachne.http.endpoint/methods methods
                             :arachne.http.endpoint/name name})]
@@ -205,14 +205,12 @@
 
   Dependencies will be assoc'd with the specified key to the Ring request map before it is
   passed to the supplied handler function."
-  (s/cat :arachne-id (s/? ::core/arachne-id)
-         :handler (s/and symbol? namespace)
+  (s/cat :handler (s/and symbol? namespace)
          :dependencies (s/? ::core/dependency-map))
-  [<arachne-id> handler <dependencies>]
+  [handler <dependencies>]
   (let [tid (cfg/tempid)
         entity (util/mkeep
                  {:db/id tid
-                  :arachne/id (:arachne-id &args)
                   :arachne.http.handler/fn (keyword (:handler &args))
                   :arachne.component/constructor :arachne.http/handler-component})
         txdata (map (fn [[k v]]

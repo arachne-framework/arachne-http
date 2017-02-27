@@ -13,8 +13,8 @@
 
 (defn plain-server-cfg
   []
-  (a/runtime :test/rt [:test/server])
-  (dummy-server :test/server 8080))
+  (a/id :test/rt (a/runtime [:test/server]))
+  (a/id :test/server (dummy-server 8080)))
 
 (deftest plain-server
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
@@ -27,20 +27,21 @@
 (defn basic-endpoints-cfg
   []
 
-  (a/runtime :test/rt [:test/server])
+  (a/id :test/rt (a/runtime [:test/server]))
 
-  (a/component :test/handler-1 'clojure.core/hash-map)
-  (a/component :test/handler-3 'clojure.core/hash-map)
+  (a/id :test/handler-1 (a/component 'clojure.core/hash-map))
+  (a/id :test/handler-3 (a/component 'clojure.core/hash-map))
 
-  (dummy-server :test/server 8080
+  (a/id :test/server
+    (dummy-server 8080
 
-    (h/endpoint :get "/" :test/handler-1 :name :the-root)
+      (h/endpoint :get "/" :test/handler-1 :name :the-root)
 
-    (h/context "/a/b/"
+      (h/context "/a/b/"
 
-      (h/endpoint #{:get :head} "/c/*w" (a/component :test/handler-2 'clojure.core/hash-map) :name :handler-2-name)
+        (h/endpoint #{:get :head} "/c/*w" (a/id :test/handler-2 (a/component 'clojure.core/hash-map)) :name :handler-2-name)
 
-      (h/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3))))
+        (h/endpoint :get "/:d(/[0-9]+/)/e" :test/handler-3)))))
 
 (deftest basic-endpoints
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
@@ -99,17 +100,18 @@
 
 (defn handler-endpoint-cfg
   []
-  (a/runtime :test/rt [:test/server])
+  (a/id :test/rt (a/runtime [:test/server]))
 
-  (dummy-server :test/server 8080
+  (a/id :test/server
+    (dummy-server 8080
 
-    (a/component :test/dep 'clojure.core/hash-map)
+      (a/id :test/dep (a/component 'clojure.core/hash-map))
 
-    (h/handler :test/handler2 'test/handler-fn-2 {:dep :test/dep})
+      (a/id :test/handler2 (h/handler 'test/handler-fn-2 {:dep :test/dep}))
 
-    (h/endpoint :get "/foo" (h/handler 'test/handler-fn-1))
-    (h/endpoint :get "/bar" :test/handler2)
-    (h/endpoint :get "/baz" (h/handler 'test/handler-fn-1) :name :override-name)))
+      (h/endpoint :get "/foo" (h/handler 'test/handler-fn-1))
+      (h/endpoint :get "/bar" :test/handler2)
+      (h/endpoint :get "/baz" (h/handler 'test/handler-fn-1) :name :override-name))))
 
 (deftest handler-endpoint
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]
@@ -140,12 +142,13 @@
 
 (defn duplicate-name-validation-cfg []
 
-  (a/runtime :test/rt [:test/server])
+  (a/id :test/rt (a/runtime [:test/server]))
 
-  (dummy-server :test/server 8080
+  (a/id :test/server
+    (dummy-server 8080
 
-    (h/endpoint :get "/foo" (h/handler 'test/handler))
-    (h/endpoint :get "/bar" (h/handler 'test/handler))))
+      (h/endpoint :get "/foo" (h/handler 'test/handler))
+      (h/endpoint :get "/bar" (h/handler 'test/handler)))))
 
 (deftest duplicate-name-validation
   (is (thrown-with-msg? ArachneException #"1 errors while validating"
@@ -154,13 +157,14 @@
 
 (defn any-method-cfg []
 
-  (a/runtime :test/rt [:test/server])
+  (a/id :test/rt (a/runtime [:test/server]))
 
-  (dummy-server :test/server 8080
+  (a/id :test/server
+    (dummy-server 8080
 
-    (h/endpoint :any "/foo" (h/handler 'test/handler))
+      (h/endpoint :any "/foo" (h/handler 'test/handler))
 
-    ))
+      )))
 
 (deftest any-method
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http]

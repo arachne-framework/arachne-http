@@ -14,16 +14,17 @@
 
 (defn url-gen-cfg []
 
-  (a/runtime :test/rt [:test/server])
+  (a/id :test/rt (a/runtime [:test/server]))
 
-  (a/component :test/handler 'clojure.core/hash-map)
+  (a/id :test/handler (a/component 'clojure.core/hash-map))
 
-  (dsltest/dummy-server :test/server 8080
+  (a/id :test/server
+    (dsltest/dummy-server 8080
 
-    (h/endpoint :get "/" :test/handler :name :a)
-    (h/endpoint :get "a/b/c" :test/handler :name :b)
-    (h/endpoint :get "a/:foo/:bar" :test/handler :name :c)
-    (h/endpoint :get "a/*wild" :test/handler :name :d)))
+      (h/endpoint :get "/" :test/handler :name :a)
+      (h/endpoint :get "a/b/c" :test/handler :name :b)
+      (h/endpoint :get "a/:foo/:bar" :test/handler :name :c)
+      (h/endpoint :get "a/*wild" :test/handler :name :d))))
 
 (deftest url-gen
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(url-gen-cfg))

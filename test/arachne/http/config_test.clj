@@ -15,17 +15,18 @@
 
 (defn test-cfg []
 
-  (a/runtime :test/rt [:test/server])
+  (a/id :test/rt (a/runtime [:test/server]))
 
-  (a/component :test/handler-1 'clojure.core/hash-map)
-  (a/component :test/handler-2 'clojure.core/hash-map)
-  (a/component :test/handler-3 'clojure.core/hash-map)
+  (a/id :test/handler-1 (a/component 'clojure.core/hash-map))
+  (a/id :test/handler-2 (a/component 'clojure.core/hash-map))
+  (a/id :test/handler-3 (a/component 'clojure.core/hash-map))
 
-  (dsltest/dummy-server :test/server 8080
+  (a/id :test/server
+    (dsltest/dummy-server 8080
 
-    (h/endpoint :get "/" :test/handler-1)
-    (h/endpoint :get "a/b/c/d" :test/handler-2)
-    (h/endpoint :get "a/b/x/y" :test/handler-3)))
+      (h/endpoint :get "/" :test/handler-1)
+      (h/endpoint :get "a/b/c/d" :test/handler-2)
+      (h/endpoint :get "a/b/x/y" :test/handler-3))))
 
 (deftest find-endpoints
   (let [cfg (core/build-config [:org.arachne-framework/arachne-http] `(test-cfg))
@@ -66,14 +67,14 @@
 
 (defn route-path-cfg []
 
-  (a/runtime :test/rt [:test/server])
+  (a/id :test/rt (a/runtime [:test/server]))
 
-  (dsltest/dummy-server :test/server 8080
-
-    (h/endpoint :get "/" (a/component :test/handler-1 'clojure.core/hash-map))
-    (h/endpoint :get "a/b/c" (a/component :test/handler-2 'clojure.core/hash-map))
-    (h/endpoint :get "foo/:param/bar" (a/component :test/handler-3 'clojure.core/hash-map))
-    (h/endpoint :get "baz/*wild" (a/component :test/handler-4 'clojure.core/hash-map))))
+  (a/id :test/server
+    (dsltest/dummy-server 8080
+      (h/endpoint :get "/" (a/id :test/handler-1 (a/component 'clojure.core/hash-map)))
+      (h/endpoint :get "a/b/c" (a/id :test/handler-2 (a/component 'clojure.core/hash-map)))
+      (h/endpoint :get "foo/:param/bar" (a/id :test/handler-3 (a/component 'clojure.core/hash-map)))
+      (h/endpoint :get "baz/*wild" (a/id :test/handler-4 (a/component 'clojure.core/hash-map))))))
 
 
 (deftest route-path-test

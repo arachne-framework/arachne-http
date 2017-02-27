@@ -13,17 +13,16 @@
 (defdsl create-dummy-server
   "Define a dummy Arachne server entity with the given Arachne ID and port. Return
   the tempid of the new server."
-  (s/cat :arachne-id ::a/arachne-id :port integer?)
-  [arachne-id port]
+  (s/cat :port integer?)
+  [port]
   (let [server-tid (cfg/tempid)]
     (script/transact [{:db/id server-tid
-                       :arachne/id arachne-id
                        :arachne.component/constructor :clojure.core/hash-map
                        :arachne.http.server/port port}]
       server-tid)))
 
 (s/fdef dummy-server
-  :args (s/cat :arachne-id ::a/arachne-id
+  :args (s/cat
           :port integer?
           :body (s/* any?)))
 
@@ -34,8 +33,8 @@
 
   The dummy server looks correct from the perspective of the configuration, and is useful for
   testing, but does nothing when started."
-  [arachne-id port & body]
-  `(let [server-eid# (create-dummy-server ~arachne-id ~port)]
+  [port & body]
+  `(let [server-eid# (create-dummy-server ~port)]
      (binding [h/*context-server* server-eid#]
        ~@body)
      server-eid#))
