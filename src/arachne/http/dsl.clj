@@ -198,7 +198,6 @@
 
   Arguments are:
 
-  - Arachne ID (optional): An Arachne ID for the handler component
   - Handler function (mandatory): A symbol naming the handler function
   - Dependency map (optional): A component dependency map of {<key> <component-reference>}.
     A component reference may be an Arachne ID or entity ID.
