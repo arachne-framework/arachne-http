@@ -1,5 +1,5 @@
 (ns arachne.http
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [clojure.string :as str]
             [clojure.set :as set]
             [arachne.core.util :as util]

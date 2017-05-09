@@ -8,7 +8,7 @@
             [arachne.http.dsl :as h]
             [arachne.core.config.script :as script :refer [defdsl]]
             [arachne.error :as e]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (defdsl create-dummy-server
   "Define a dummy Arachne server entity with the given Arachne ID and port. Return

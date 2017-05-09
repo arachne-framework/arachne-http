@@ -6,7 +6,7 @@
             [arachne.http.dsl :as h]
             [arachne.core.config.script :as script :refer [defdsl]]
             [arachne.error :as e]
-            [clojure.spec :as s]
+            [clojure.spec.alpha :as s]
             [arachne.http.dsl.test :refer [dummy-server]]
             [arachne.core.runtime :as rt])
   (:import (arachne ArachneException)))
